@@ -1,0 +1,12 @@
+[submodule "ofxGStreamer"]
+	path = ofxGStreamer
+	url = https://github.com/arturoc/ofxGStreamer.git
+[submodule "ofxGstRTP"]
+	path = ofxGstRTP
+	url = https://github.com/arturoc/ofxGstRTP.git
+[submodule "ofxSnappy"]
+	path = ofxSnappy
+	url = https://github.com/arturoc/ofxSnappy.git
+[submodule "ofxDepthStreamCompression"]
+	path = ofxDepthStreamCompression
+	url = https://github.com/arturoc/ofxDepthStreamCompression.git

@@ -1,4 +1,4 @@
-#include "nebulaEye.h"
+#include "ofApp.h"
 
 int main()
 {

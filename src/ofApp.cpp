@@ -1,4 +1,4 @@
-#include "nebulaEye.h"
+#include "ofApp.h"
 
 void nebulaEye::setup()
 {
@@ -22,7 +22,8 @@ void nebulaEye::update()
 void nebulaEye::draw()
 {
   ofSetColor(255);
-  remoteVideo.draw(0,0);
+  if ( remoteVideo.isAllocated() )
+    remoteVideo.draw(0,0);
   gui.draw();
 }
 

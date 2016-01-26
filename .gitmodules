@@ -10,3 +10,6 @@ url=https://github.com/avilleret/ofxGstRTP.git
 [submodule "ofxDepthStreamCompression"]
 	path = ofxDepthStreamCompression
 	url = https://github.com/arturoc/ofxDepthStreamCompression.git
+[submodule "ofxCv"]
+	path = ofxCv
+	url = https://github.com/kylemcdonald/ofxCv.git

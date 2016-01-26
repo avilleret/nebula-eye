@@ -21,7 +21,10 @@ include_directories (
 
 set(SOURCES
     src/main.cpp
-    src/nebulaEye.cpp
+    src/ofApp.cpp
+    src/nebulaBackground.cpp
+    src/nebulaContourFinder.cpp
+    src/nebulaFlow.cpp
 )
 
 add_executable(

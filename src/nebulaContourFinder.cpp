@@ -6,19 +6,23 @@
 
 void nebulaContourFinder::setup(){
   // setup contour finder parameter GUI
+  guiGrp.setName("Blob tracker");
   guiGrp.add(enabled.set("enable",true));
   guiGrp.add(minAreaRad.set("minimum area radius",1,0,320));
-  guiGrp.add(minAreaRad.set("maximum area radius",100,0,320));
+  guiGrp.add(maxAreaRad.set("maximum area radius",100,0,320));
   guiGrp.add(threshold.set("threshold",15,0,100));
   guiGrp.add(blurAmount.set("blur",10,0,100));
+  guiGrp.add(persistence.set("persistence", 15,0,200));
+  guiGrp.add(maxDistance.set("max distance",32,0,200));
+  guiGrp.add(showLabels.set("show label",true));
 
   contourFinder.setMinAreaRadius(minAreaRad);
   contourFinder.setMaxAreaRadius(maxAreaRad);
-  contourFinder.setThreshold(15);
+  contourFinder.setThreshold(threshold);
   // wait for half a frame before forgetting something
-  contourFinder.getTracker().setPersistence(15);
+  contourFinder.getTracker().setPersistence(persistence);
   // an object can move up to 32 pixels per frame
-  contourFinder.getTracker().setMaximumDistance(32);
+  contourFinder.getTracker().setMaximumDistance(maxDistance);
 }
 
 void nebulaContourFinder::update(ofPixels &img){

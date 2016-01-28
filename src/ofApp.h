@@ -1,10 +1,10 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxGstRTPClient.h"
 #include "ofxGui.h"
 #include "ofxCv.h"
 
+#include "nebulaVideoSrc.h"
 #include "nebulaFlow.h"
 #include "nebulaBackground.h"
 #include "nebulaContourFinder.h"
@@ -27,8 +27,6 @@ class nebulaEye : public ofBaseApp
     void learningTimeChanged(int & _time);
     void thresholdChanged(int & tresh);
 
-    ofxGstRTPClient client;
-    ofTexture remoteVideo;
     ofParameter<ofVec2f> center;
     ofParameter<float> radius;
 
@@ -36,6 +34,7 @@ class nebulaEye : public ofBaseApp
 
     ofxPanel gui;
 
+    nebulaVideoSrc video;
     nebulaFlow flow;
     nebulaBackground bgSub;
     nebulaContourFinder contour;

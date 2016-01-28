@@ -25,6 +25,7 @@ set(SOURCES
     src/nebulaBackground.cpp
     src/nebulaContourFinder.cpp
     src/nebulaFlow.cpp
+    src/nebulaVideoSrc.cpp
 )
 
 add_executable(

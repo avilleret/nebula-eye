@@ -11,8 +11,8 @@ void nebulaBackground::setup(){
 
   learningTime.addListener(this, &nebulaBackground::learningTimeChanged);
   threshold.addListener(this, &nebulaBackground::thresholdChanged);
-  background.setLearningTime(900);
-  background.setThresholdValue(10);
+  background.setLearningTime(learningTime);
+  background.setThresholdValue(threshold);
 }
 
 void nebulaBackground::update(ofPixels &img){

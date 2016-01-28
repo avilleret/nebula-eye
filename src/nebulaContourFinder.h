@@ -12,9 +12,11 @@ public:
 
 //protected:
     ofxCv::ContourFinder contourFinder;
+    ofFbo fbo;
 
     ofParameterGroup guiGrp;
-    ofParameter<int> minAreaRad, maxAreaRad, threshold, blurAmount;
+    ofParameter<int> minAreaRad, maxAreaRad, threshold, blurAmount, persistence, maxDistance;
     ofParameter<bool> showLabels, enabled;
     cv::Mat blurred;
+    ofImage blurredImg;
 };

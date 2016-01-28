@@ -16,5 +16,5 @@ public:
     ofParameterGroup guiGrp;
     ofParameter<float> fbPyrScale, fbPolySigma;
     ofParameter<int> fbLevels, fbIterations, fbPolyN, fbWinSize;
-    ofParameter<bool> fbUseGaussian, usefb;
+    ofParameter<bool> fbUseGaussian, usefb, enabled;
 };

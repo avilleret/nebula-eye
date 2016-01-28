@@ -15,5 +15,6 @@ public:
 
     ofParameterGroup guiGrp;
     ofParameter<int> minAreaRad, maxAreaRad, threshold, blurAmount;
+    ofParameter<bool> showLabels, enabled;
     cv::Mat blurred;
 };

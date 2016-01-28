@@ -19,4 +19,5 @@ public:
 
     ofParameterGroup guiGrp;
     ofParameter<int> threshold, learningTime;
+    ofParameter<bool> enabled;
 };

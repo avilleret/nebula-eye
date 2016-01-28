@@ -6,6 +6,7 @@
 void nebulaFlow::setup(){
     // setup flow parameter GUI
   guiGrp.setName("Motion flow parameters");
+  guiGrp.add(enabled.set("enable",true));
   guiGrp.add(fbPyrScale.set("fbPyrScale", .5, 0, .99));
   guiGrp.add(fbLevels.set("fbLevels", 4, 1, 8));
   guiGrp.add(fbIterations.set("fbIterations", 2, 1, 8));
@@ -16,6 +17,7 @@ void nebulaFlow::setup(){
 }
 
 void nebulaFlow::update(ofPixels &img){
+  if(!enabled) return;
   flow.setPyramidScale(fbPyrScale);
   flow.setNumLevels(fbLevels);
   flow.setWindowSize(fbWinSize);
@@ -28,5 +30,6 @@ void nebulaFlow::update(ofPixels &img){
 }
 
 void nebulaFlow::draw(int x, int y, int w, int h){
+  if(!enabled) return;
   flow.draw(x,y,w,h);
 }

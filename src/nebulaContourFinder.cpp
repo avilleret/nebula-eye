@@ -27,19 +27,6 @@ void nebulaContourFinder::setup(){
   contourFinder.getTracker().setMaximumDistance(maxDistance);
 }
 
-void nebulaContourFinder::update(ofPixels &img){
-  if(!enabled) return;
-  ofxCv::blur(img, blurred, blurAmount);
-  contourFinder.findContours(blurred);
-
-  if(blurred.getWidth() != fbo.getWidth() || blurred.getHeight() != fbo.getHeight() ){
-    fbo.allocate(blurred.getWidth(), blurred.getHeight(), GL_RGBA);
-    fbo.begin();
-    ofClear(0,0,0,0); // clear screen after allocation
-    fbo.end();
-  }
-}
-
 void nebulaContourFinder::draw(int x, int y, int w, int h){
   if(!enabled) return;
   ofxCv::RectTracker& tracker = contourFinder.getTracker();

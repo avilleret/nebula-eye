@@ -28,13 +28,12 @@ public:
     ofParameterGroup guiGrp;
     ofParameter<int> threshold, learningTime;
     ofParameter<bool> enabled, algoClassic, algoGMG, algoMOG, algoMOG2, showBgsubGui;
-    std::vector<ofAbstractParameter*> bgsubParameters;
-    //std::vector<ofParameter<ParameterType> &> bgsubParameters;
+    //std::vector<std::unique_ptr<ofAbstractParameter>> bgsubParameters;
+    std::vector<ofParameter<float> > bgsubParameters;
     ofxGuiGroup bgsubGui;
 
     cv::Ptr<cv::BackgroundSubtractor> m_fgbg;
-    // cv::Ptr<cv::BackgroundSubtractor> m_fgbgMOG;
-    // cv::Ptr<cv::BackgroundSubtractorGMG> m_fgbgGMG;
+
     cv::Mat m_fgmask, m_segm;
     std::string m_algoName;
     std::vector<std::string> m_bgsub_algos;

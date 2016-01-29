@@ -173,10 +173,38 @@ void nebulaBackground::initBgsubGui(){
     for (size_t i=0; i < paramList.size(); i++){
       ofLogVerbose("nebulaBackground") << paramList[i] << " type : " << m_fgbg->paramType(paramList[i]);
       ofLogVerbose("nebulaBackground") << m_fgbg->paramHelp(paramList[i]);
-      // if( paramType(paramList[i]) == )
-      // bugsubParameter.push_back(new ofParameter());
-      // bgsubGui.add(bugsubParameter[i].set(paramList[i]));
-    }
+      float defaultValue(0.);
+
+      switch ( m_fgbg->paramType(paramList[i]) ){
+        case cv::Param::BOOLEAN:
+          defaultValue = static_cast<float>(m_fgbg->getBool(paramList[i]));
+          //bgsubParameters.emplace_back(new ofParameter<bool>());
+          //ofAbstractParameter* p = bgsubParameters[i];
+          //bgsubGui.add(static_cast<ofParameter<bool> >(bgsubParameters[i])->set(paramList[i]));
+          break;
+        case cv::Param::REAL:
+        case cv::Param::FLOAT:
+          defaultValue = static_cast<float>(m_fgbg->getDouble(paramList[i]));
+          //bgsubParameters.emplace_back(new ofParameter<float>());
+          //bgsubGui.add(bgsubParameters[i].set(paramList[i]));
+          break;
+        case cv::Param::UNSIGNED_INT:
+        case cv::Param::UINT64:
+        case cv::Param::UCHAR:
+          defaultValue = static_cast<float>(m_fgbg->getInt(paramList[i]));
+          //bgsubParameters.emplace_back(new ofParameter<int>());
+          //bgsubGui.add(bgsubParameters[i].set(paramList[i]));
+          break;
+        default:
+          break;
+      }
+
+      bgsubParameters.emplace_back();
+      bgsubGui.add(bgsubParameters[i].set(paramList[i],
+                                          defaultValue,
+                                          defaultValue!=0 ? defaultValue/4 : 0,
+                                          defaultValue!=0 ? defaultValue*4 : 100));
+      }
   } else {
     ofLogVerbose("nebulaBackground") << 0 << " Learning time";
     ofLogVerbose("nebulaBackground") << 1 << " Treshold";

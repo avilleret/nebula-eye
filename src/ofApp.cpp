@@ -11,12 +11,14 @@ void nebulaEye::setup()
   bgSub.setup();
   contour.setup();
 
-  gui.setup("","settings.xml",660,10);
+  gui.setup("nebula-eye","settings.xml",660,10);
   gui.add(video.guiGrp);
   gui.add(roiGuiGrp);
   gui.add(bgSub.guiGrp);
   gui.add(flow.guiGrp);
   gui.add(contour.guiGrp);
+
+  gui.loadFromFile("settings.xml");
 
   ofSetCircleResolution(100);
 

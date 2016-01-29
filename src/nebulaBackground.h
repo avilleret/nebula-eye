@@ -1,11 +1,17 @@
 #pragma once
 #include "ofxCv.h"
 #include "ofxGui.h"
+#include "nebulaContourFinder.h"
 
 class nebulaBackground {
 public:
     void learningTimeChanged(int & t);
     void thresholdChanged(int & thresh);
+    void algoMOGCb(bool & flag);
+    void algoMOG2Cb(bool & flag);
+    void algoGMGCb(bool & flag);
+    void algoClassicCb(bool & flag);
+    void initAlgo();
 
     void setup();
     void update(ofPixels &img);
@@ -19,5 +25,12 @@ public:
 
     ofParameterGroup guiGrp;
     ofParameter<int> threshold, learningTime;
-    ofParameter<bool> enabled;
+    ofParameter<bool> enabled, algoClassic, algoGMG, algoMOG, algoMOG2;
+
+    cv::Ptr<cv::BackgroundSubtractor> m_fgbgMOG;
+    cv::Ptr<cv::BackgroundSubtractorGMG> m_fgbgGMG;
+    cv::Mat m_fgmask, m_segm;
+    std::string m_algoName;
+    std::vector<std::string> m_bgsub_algos;
+    ofParameter<int> m_threshold, m_initFrames;
 };

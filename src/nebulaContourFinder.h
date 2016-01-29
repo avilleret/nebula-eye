@@ -10,6 +10,8 @@ public:
     void draw(int x, int y, int w, int h);
     void draw(int x, int y){draw(x,y,0,0);};
 
+    void showLabelsCb(bool& flag);
+
 //protected:
     ofxCv::ContourFinder contourFinder;
     ofFbo fbo;
@@ -17,6 +19,5 @@ public:
     ofParameterGroup guiGrp;
     ofParameter<int> minAreaRad, maxAreaRad, threshold, blurAmount, persistence, maxDistance;
     ofParameter<bool> showLabels, enabled;
-    cv::Mat blurred;
-    ofImage blurredImg;
+    ofImage blurred;
 };

@@ -16,6 +16,8 @@ void nebulaContourFinder::setup(){
   guiGrp.add(maxDistance.set("max distance",32,0,200));
   guiGrp.add(showLabels.set("show label",true));
 
+  showLabels.addListener(this, &nebulaContourFinder::showLabelsCb);
+
   contourFinder.setMinAreaRadius(minAreaRad);
   contourFinder.setMaxAreaRadius(maxAreaRad);
   contourFinder.setThreshold(threshold);
@@ -28,14 +30,12 @@ void nebulaContourFinder::setup(){
 void nebulaContourFinder::update(ofPixels &img){
   if(!enabled) return;
   ofxCv::blur(img, blurred, blurAmount);
-  ofxCv::toOf(blurred, blurredImg);
-  //blurredImg = ofImage(img);
   contourFinder.findContours(blurred);
 
-  if(blurredImg.getWidth() != fbo.getWidth() || blurredImg.getHeight() != fbo.getHeight() ){
-    fbo.allocate(blurredImg.getWidth(), blurredImg.getHeight(), GL_RGB);
+  if(blurred.getWidth() != fbo.getWidth() || blurred.getHeight() != fbo.getHeight() ){
+    fbo.allocate(blurred.getWidth(), blurred.getHeight(), GL_RGBA);
     fbo.begin();
-    ofClear(0,0,255, 0); // blue screen after allocation
+    ofClear(0,0,0,0); // clear screen after allocation
     fbo.end();
   }
 }
@@ -45,13 +45,9 @@ void nebulaContourFinder::draw(int x, int y, int w, int h){
   ofxCv::RectTracker& tracker = contourFinder.getTracker();
 
   fbo.begin();
-  ofClear(0, 0, 0, 0);
-
-  if ( blurredImg.isAllocated() )
-    blurredImg.draw(x,y,w,h);
-  contourFinder.draw();
-
   if(showLabels) {
+    ofClear(0, 0, 0, 0);
+    contourFinder.draw();
     ofSetColor(255);
     for(int i = 0; i < contourFinder.size(); i++) {
       ofPoint center = ofxCv::toOf(contourFinder.getCenter(i));
@@ -115,4 +111,12 @@ void nebulaContourFinder::draw(int x, int y, int w, int h){
     ofDrawLine(j, 12, j, 16);
   }
   ofPopMatrix();
+}
+
+void nebulaContourFinder::showLabelsCb(bool& flag){
+  if (!flag){
+    fbo.begin();
+    ofClear(0,0,0,0); // clear sceen before drawing
+    fbo.end();
+  }
 }

@@ -39,7 +39,7 @@ void nebulaEye::draw()
   video.draw(0,0,640,480);
   bgSub.draw(640,0,640,480);
   flow.draw(0,480, 640, 480);
-  contour.draw(640,480,640,480);
+  contour.draw(0,0,640,480);
 
   //ofSetColor(255,255,255,128);
   //ofDrawCircle(center->x, center->y, radius);

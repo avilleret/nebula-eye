@@ -14,6 +14,7 @@ void nebulaBackground::setup(){
   guiGrp.add(algoGMG.set("use GMG algo", true));
   guiGrp.add(algoMOG.set("use MOG algo",false));
   guiGrp.add(algoMOG2.set("use MOG2 algo",false));
+  guiGrp.add(showBgsubGui.set("show bgsub parameters",true));
 
   learningTime.addListener(this, &nebulaBackground::learningTimeChanged);
   threshold.addListener(this, &nebulaBackground::thresholdChanged);
@@ -28,6 +29,7 @@ void nebulaBackground::setup(){
   cv::initModule_video();
   cv::setUseOptimized(true);
   cv::setNumThreads(8);
+  bgsubGui.setup();
 
   vector<string> algorithms;
   cv::Algorithm::getList(algorithms);
@@ -48,11 +50,11 @@ void nebulaBackground::setup(){
     }
 
     if ( m_bgsub_algos[0] == "BackgroundSubtractor.GMG"){
-      m_fgbgGMG = cv::Algorithm::create<cv::BackgroundSubtractorGMG>(m_bgsub_algos[0]);
+      m_fgbg = cv::Algorithm::create<cv::BackgroundSubtractorGMG>(m_bgsub_algos[0]);
     } else {
-      m_fgbgMOG = cv::Algorithm::create<cv::BackgroundSubtractor>(m_bgsub_algos[0]);
+      m_fgbg = cv::Algorithm::create<cv::BackgroundSubtractor>(m_bgsub_algos[0]);
     }
-    if (m_fgbgMOG.empty() && m_fgbgGMG.empty())
+    if (m_fgbg.empty() /* && m_fgbgGMG.empty() */)
     {
       ofLogError("Failed to create BackgroundSubtractor Algorithm.");
     }
@@ -66,13 +68,10 @@ void nebulaBackground::update(ofPixels &img){
   // ofImage img = ofImage(px);
   cv::Mat input = ofxCv::toCv(img);
 
-  if (!m_fgbgMOG.empty()){
-    (*m_fgbgMOG)(input, m_fgmask);
+  if (!m_fgbg.empty()){
+    (*m_fgbg)(input, m_fgmask);
     ofxCv::copy(m_fgmask, thresholded);
-  } else if (!m_fgbgGMG.empty()) {
-    (*m_fgbgGMG)(input, m_fgmask);
-    ofxCv::copy(m_fgmask, thresholded);
-  } else {
+   } else {
     background.update(img, thresholded);
   }
   thresholded.update();
@@ -82,6 +81,8 @@ void nebulaBackground::draw(int x, int y, int w, int h){
   if(!enabled) return;
   if ( thresholded.isAllocated() )
     thresholded.draw(x,y,w,h);
+  if ( showBgsubGui )
+    bgsubGui.draw();
 }
 
 void nebulaBackground::learningTimeChanged(int & t){
@@ -130,8 +131,7 @@ void nebulaBackground::algoClassicCb(bool & flag){
 
 void nebulaBackground::initAlgo(){
 
-  if ( !m_fgbgMOG.empty() ) m_fgbgMOG.release();
-  if ( !m_fgbgGMG.empty() ) m_fgbgGMG.release();
+  if ( !m_fgbg.empty() ) m_fgbg.release();
 
   if ( algoGMG ) m_algoName = "BackgroundSubtractor.GMG";
   else if ( algoMOG ) m_algoName = "BackgroundSubtractor.MOG";
@@ -143,17 +143,49 @@ void nebulaBackground::initAlgo(){
    for ( int i = 0; i < m_bgsub_algos.size(); i++){
     if (  m_bgsub_algos[i] == m_algoName ){
       if ( m_bgsub_algos[i] == "BackgroundSubtractor.GMG"){
-        m_fgbgGMG = cv::Algorithm::create<cv::BackgroundSubtractorGMG>(m_bgsub_algos[i]);
+        m_fgbg = cv::Algorithm::create<cv::BackgroundSubtractorGMG>(m_bgsub_algos[i]);
       } else {
-        m_fgbgMOG = cv::Algorithm::create<cv::BackgroundSubtractor>(m_bgsub_algos[i]);
+        m_fgbg = cv::Algorithm::create<cv::BackgroundSubtractor>(m_bgsub_algos[i]);
       }
-      if (m_fgbgMOG.empty() && m_fgbgGMG.empty())
+      if (m_fgbg.empty() )
       {
         ofLogError("nebulaBackground") << "Failed to create " <<  m_bgsub_algos[i] << " algo.";
       } else {
         ofLogVerbose("nebulaBackground") << "bgsub " << i << " : " << m_bgsub_algos[i] << " created.";
-        m_algoName = m_bgsub_algos[i].substr(21);
       }
     }
   }
+  initBgsubGui();
+}
+
+void nebulaBackground::save(){
+  bgsubGui.saveToFile(m_algoName + ".xml");
+}
+
+void nebulaBackground::initBgsubGui(){
+  bgsubGui.clear();
+  bgsubGui.setName(m_algoName);
+  vector<string> paramList;
+  bgsubParameters.clear();
+
+  if (!m_fgbg.empty()){
+    m_fgbg->getParams(paramList);
+    for (size_t i=0; i < paramList.size(); i++){
+      ofLogVerbose("nebulaBackground") << paramList[i] << " type : " << m_fgbg->paramType(paramList[i]);
+      ofLogVerbose("nebulaBackground") << m_fgbg->paramHelp(paramList[i]);
+      // if( paramType(paramList[i]) == )
+      // bugsubParameter.push_back(new ofParameter());
+      // bgsubGui.add(bugsubParameter[i].set(paramList[i]));
+    }
+  } else {
+    ofLogVerbose("nebulaBackground") << 0 << " Learning time";
+    ofLogVerbose("nebulaBackground") << 1 << " Treshold";
+    paramList.push_back("Learning time");
+    paramList.push_back("Threshold");
+  }
+
+  ofLogVerbose("nebulaBackground") << "algo " << m_algoName << " has " << paramList.size() << " parameter(s).";
+
+
+  bgsubGui.loadFromFile(m_algoName + ".xml");
 }

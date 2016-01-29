@@ -34,7 +34,7 @@ void nebulaEye::update()
     auto img = video.getPixels();
     bgSub.update(img);
     flow.update(img);
-    contour.update(img);
+    contour.update(bgSub.m_fgmask);
   }
 }
 

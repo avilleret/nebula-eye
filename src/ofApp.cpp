@@ -20,6 +20,8 @@ void nebulaEye::setup()
 
   gui.loadFromFile("settings.xml");
 
+  ofAddListener(gui.savePressedE, &bgSub, &nebulaBackground::saveAlgoParam);
+
   ofSetCircleResolution(100);
 
   ofSetBackgroundColor(0);

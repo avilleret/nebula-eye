@@ -25,6 +25,7 @@ void nebulaBackground::setup(){
   algoGMG.addListener(this, &nebulaBackground::algoGMGCb);
   algoMOG.addListener(this, &nebulaBackground::algoMOGCb);
   algoMOG2.addListener(this, &nebulaBackground::algoMOG2Cb);
+
   // OpenCV initialization
   cv::initModule_video();
   cv::setUseOptimized(true);
@@ -216,4 +217,9 @@ void nebulaBackground::initBgsubGui(){
 
 
   bgsubGui.loadFromFile(m_algoName + ".xml");
+}
+
+void nebulaBackground::saveAlgoParam(){
+  ofLogVerbose("nebulaBackground") << "save algo parameter to file";
+  bgsubGui.saveToFile(m_algoName + ".xml");
 }

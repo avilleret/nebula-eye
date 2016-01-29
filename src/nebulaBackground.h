@@ -19,6 +19,7 @@ public:
     void draw(int x, int y){draw(x,y,0,0);};
     void save(); // save GUI parameters
     void initBgsubGui();
+    void saveAlgoParam();
 
 //protected:
     ofxCv::RunningBackground background;

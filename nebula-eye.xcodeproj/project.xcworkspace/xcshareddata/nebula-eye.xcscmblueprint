@@ -1,0 +1,51 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "AEA7DB535DEA03FB449EC9630B1841C4E6179638",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "89AEA15953FADA42468C343CB60A9B1BA364E9AB" : 0,
+    "76FA968CA334FB7BB92E03957D3EF6E86E0F8D32" : 0,
+    "AEA7DB535DEA03FB449EC9630B1841C4E6179638" : 0,
+    "37526DA425E5430474A14FBFA1BC4525160B5FC1" : 0,
+    "62AD38A853790DF3EC11E6F04E12E51471859353" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "0407E335-909D-4AB7-90F6-CC5E77A5E8A3",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "89AEA15953FADA42468C343CB60A9B1BA364E9AB" : "nebula-eye\/ofxGstRTP\/",
+    "76FA968CA334FB7BB92E03957D3EF6E86E0F8D32" : "nebula-eye\/ofxDepthStreamCompression\/",
+    "AEA7DB535DEA03FB449EC9630B1841C4E6179638" : "nebula-eye\/",
+    "37526DA425E5430474A14FBFA1BC4525160B5FC1" : "nebula-eye\/ofxCv\/",
+    "62AD38A853790DF3EC11E6F04E12E51471859353" : "nebula-eye\/ofxSnappy\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "nebula-eye",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "nebula-eye.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/kylemcdonald\/ofxCv.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "37526DA425E5430474A14FBFA1BC4525160B5FC1"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/arturoc\/ofxSnappy.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "62AD38A853790DF3EC11E6F04E12E51471859353"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/arturoc\/ofxDepthStreamCompression.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "76FA968CA334FB7BB92E03957D3EF6E86E0F8D32"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/avilleret\/ofxGstRTP.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "89AEA15953FADA42468C343CB60A9B1BA364E9AB"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/avilleret\/nebula-eye.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "AEA7DB535DEA03FB449EC9630B1841C4E6179638"
+    }
+  ]
+}

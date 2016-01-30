@@ -32,6 +32,7 @@ void nebulaBackground::setup(){
   cv::setNumThreads(8);
   bgsubGui.setup();
 
+  // BackgroundSubtractor algorithms initialization
   vector<string> algorithms;
   cv::Algorithm::getList(algorithms);
   string model = "BackgroundSubtractor.";
@@ -61,6 +62,21 @@ void nebulaBackground::setup(){
     }
     initAlgo();
   }
+
+  // OpenCL initialization
+  cv::ocl::DevicesInfo devicesInfo;
+  cv::ocl::getOpenCLDevices(devicesInfo);
+  ofLogNotice("nebulaBackground") << "Found " << devicesInfo.size() << " OpenCL device(s).";
+  for ( size_t i = 0; i < devicesInfo.size(); i++){
+    ofLogNotice("nebulaBackground") << devicesInfo[i]->deviceVendor << " " << devicesInfo[i];
+  }
+
+  if ( devicesInfo.size() == 0 ){
+    ofLogNotice("nebulaBackground") << "can't find OpenCL device, switch to CPU mode";
+    gpuMode = false;
+  } else {
+    gpuMode = true;
+  }
 }
 
 void nebulaBackground::update(ofPixels &img){
@@ -68,8 +84,26 @@ void nebulaBackground::update(ofPixels &img){
 
   // ofImage img = ofImage(px);
   cv::Mat input = ofxCv::toCv(img);
-
-  if (!m_fgbg.empty()){
+  if ( gpuMode ) {
+    try  {
+      d_input = input;
+      if ( m_algoName == "MOG" ){
+        m_oclMOG( d_input, d_fgmask );
+      } else if ( m_algoName == "MOG2" ){
+        m_oclMOG2( d_input, d_fgmask, 0.01f );
+      } else {
+        ofLogError("nebulaBackground") << "there is no GPU version of algo " << m_algoName;
+        gpuMode = false;
+        return;
+      }
+      d_fgmask.download(m_fgmask);
+    } catch (cv::Exception& e) {
+      ofLogError("nebulaBackground") << "can't use OpenCL, do you have OpenCL driver installed ?";
+      ofLogError("nebulaBackground") << "error " << e.code << " : " << e.err;
+      gpuMode = false;
+      return;
+    }
+  } else if (!m_fgbg.empty()){
     (*m_fgbg)(input, m_fgmask);
     ofxCv::copy(m_fgmask, thresholded);
    } else {
@@ -84,6 +118,8 @@ void nebulaBackground::draw(int x, int y, int w, int h){
     thresholded.draw(x,y,w,h);
   if ( showBgsubGui )
     bgsubGui.draw();
+  if ( gpuMode )
+    ofDrawBitmapStringHighlight("GPU Mode", ofPoint(x+10,y+10), ofColor(255,0,0), ofColor(255,255,255));
 }
 
 void nebulaBackground::learningTimeChanged(int & t){

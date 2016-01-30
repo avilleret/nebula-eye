@@ -1,7 +1,7 @@
 #pragma once
 #include "ofxCv.h"
 #include "ofxGui.h"
-#include "nebulaContourFinder.h"
+#include "opencv2/ocl/ocl.hpp"
 
 class nebulaBackground {
 public:
@@ -28,7 +28,9 @@ public:
 
     ofParameterGroup guiGrp;
     ofParameter<int> threshold, learningTime;
-    ofParameter<bool> enabled, algoClassic, algoGMG, algoMOG, algoMOG2, showBgsubGui;
+    ofParameter<bool> enabled, algoClassic, algoGMG, algoMOG, algoMOG2, showBgsubGui, forceCPU;
+    bool gpuMode;
+
     //std::vector<std::unique_ptr<ofAbstractParameter>> bgsubParameters;
     std::vector<ofParameter<float> > bgsubParameters;
     ofxGuiGroup bgsubGui;
@@ -39,4 +41,9 @@ public:
     std::string m_algoName;
     std::vector<std::string> m_bgsub_algos;
     ofParameter<int> m_threshold, m_initFrames;
+
+    cv::ocl::MOG m_oclMOG;
+    cv::ocl::MOG2 m_oclMOG2;
+    //~ cv::ocl::GMG m_oclGMG;
+    cv::ocl::oclMat d_input, d_fgmask;
 };

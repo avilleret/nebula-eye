@@ -2,6 +2,7 @@
 
 #include "ofxCv.h"
 #include "ofxGui.h"
+#include "opencv2/ocl/ocl.hpp"
 
 class nebulaFlow {
 public:
@@ -16,5 +17,10 @@ public:
     ofParameterGroup guiGrp;
     ofParameter<float> fbPyrScale, fbPolySigma;
     ofParameter<int> fbLevels, fbIterations, fbPolyN, fbWinSize;
-    ofParameter<bool> fbUseGaussian, usefb, enabled;
+    ofParameter<bool> fbUseGaussian, usefb, enabled, forceCPU;
+    bool gpuMode;
+
+    cv::ocl::FarnebackOpticalFlow oclFbFlow;
+    cv::ocl::oclMat d_prev, d_input, d_flowx, d_flowy; // d for "device"
+    // cv::ocl::PyrLKOpticalFlow oclLKFLow;
 };

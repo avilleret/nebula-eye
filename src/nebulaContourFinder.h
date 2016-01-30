@@ -1,5 +1,5 @@
 #pragma once
-
+#include "ofMain.h"
 #include "ofxCv.h"
 #include "ofxGui.h"
 

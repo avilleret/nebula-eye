@@ -34,8 +34,8 @@ void nebulaContourFinder::draw(int x, int y, int w, int h){
   fbo.begin();
   if(showLabels) {
     ofClear(0, 0, 0, 0);
-    contourFinder.draw();
     ofSetColor(255);
+    contourFinder.draw();
     for(int i = 0; i < contourFinder.size(); i++) {
       ofPoint center = ofxCv::toOf(contourFinder.getCenter(i));
       ofPushMatrix();

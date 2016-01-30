@@ -9,7 +9,9 @@ public:
     template<class S>
     void update(S &img){
       if(!enabled) return;
-      ofxCv::blur(img, blurred, blurAmount);
+
+      ofxCv::erode(img, blurred, erodeAmount);
+      ofxCv::blur(blurred, blurAmount);
       contourFinder.findContours(blurred);
 
       if(blurred.getWidth() != fbo.getWidth() || blurred.getHeight() != fbo.getHeight() ){
@@ -29,7 +31,7 @@ public:
     ofFbo fbo;
 
     ofParameterGroup guiGrp;
-    ofParameter<int> minAreaRad, maxAreaRad, threshold, blurAmount, persistence, maxDistance;
+    ofParameter<int> minAreaRad, maxAreaRad, threshold, blurAmount, erodeAmount, persistence, maxDistance;
     ofParameter<bool> showLabels, enabled;
     ofImage blurred;
 };

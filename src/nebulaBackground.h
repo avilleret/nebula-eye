@@ -20,6 +20,7 @@ public:
     void save(); // save GUI parameters
     void initBgsubGui();
     void saveAlgoParam();
+    void parameterChanged(float& v);
 
 //protected:
     ofxCv::RunningBackground background;

@@ -241,6 +241,7 @@ void nebulaBackground::initBgsubGui(){
                                           defaultValue,
                                           defaultValue!=0 ? defaultValue/4 : 0,
                                           defaultValue!=0 ? defaultValue*4 : 100));
+      bgsubParameters[i].addListener(this, &nebulaBackground::parameterChanged);
       }
   } else {
     ofLogVerbose("nebulaBackground") << 0 << " Learning time";
@@ -258,4 +259,49 @@ void nebulaBackground::initBgsubGui(){
 void nebulaBackground::saveAlgoParam(){
   ofLogVerbose("nebulaBackground") << "save algo parameter to file";
   bgsubGui.saveToFile(m_algoName + ".xml");
+}
+
+void nebulaBackground::parameterChanged(float& v){
+  ofLogVerbose("nebulaBackground") << "update algo paramters";
+  for (size_t i=0; i < bgsubParameters.size(); i++){
+      ofLogVerbose("nebulaBackground") << bgsubParameters[i].getName() << " : " << bgsubParameters[i];
+      if(gpuMode){
+        if ( m_algoName.substr(21) == "MOG" ){
+            if ( "backgroundRatio" == bgsubParameters[i].getName() ){
+              m_oclMOG.backgroundRatio=bgsubParameters[i];
+            } else if  ( "history" == bgsubParameters[i].getName() ){
+              m_oclMOG.history=bgsubParameters[i];
+            } else if  ( "noiseSigma" == bgsubParameters[i].getName() ){
+              m_oclMOG.noiseSigma=bgsubParameters[i];
+            } else if  ( "nmixtures" == bgsubParameters[i].getName() ){
+              m_oclMOG.varThreshold=bgsubParameters[i];
+            }
+        } else if ( m_algoName.substr(21) == "MOG2" ){
+            if ( "backgroundRatio" == bgsubParameters[i].getName() ){
+              m_oclMOG2.backgroundRatio=bgsubParameters[i];
+            } else if  ( "history" == bgsubParameters[i].getName() ){
+              m_oclMOG2.history=bgsubParameters[i];
+            } else if  ( "detectShadows" == bgsubParameters[i].getName() ){
+              m_oclMOG2.bShadowDetection=bgsubParameters[i];
+            }  else if ( "nShadowDetection" == bgsubParameters[i].getName() ){
+                m_oclMOG2.nShadowDetection=bgsubParameters[i];
+            } else if  ( "fCT" == bgsubParameters[i].getName() ){
+              m_oclMOG2.fCT=bgsubParameters[i];
+            } else if  ( "fTau" == bgsubParameters[i].getName() ){
+                m_oclMOG2.fTau=bgsubParameters[i];
+            } else if  ( "fVarInit" == bgsubParameters[i].getName() ){
+                m_oclMOG2.fVarInit=bgsubParameters[i];
+            } else if  ( "fVarMax" == bgsubParameters[i].getName() ){
+                m_oclMOG2.fVarMax=bgsubParameters[i];
+            } else if  ( "fVarMin" == bgsubParameters[i].getName() ){
+                m_oclMOG2.fVarMin=bgsubParameters[i];
+            } else if  ( "varThreshold" == bgsubParameters[i].getName() ){
+                m_oclMOG2.varThreshold=bgsubParameters[i];
+            }
+            // nmixture is missing, but used used in the MOG2 ctr
+        }
+      } else {
+        m_fgbg->setDouble(bgsubParameters[i].getName(), bgsubParameters[i]);
+      }
+  }
 }

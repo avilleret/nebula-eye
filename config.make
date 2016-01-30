@@ -77,7 +77,9 @@
 # add a runtime path to search for those shared libraries, since they aren't 
 # incorporated directly into the final executable application binary.
 # TODO: should this be a default setting?
-PROJECT_LDFLAGS=-Wl,-rpath=./libs `pkg-config --libs opencv`
+PROJECT_LDFLAGS=-Wl,-rpath=./libs 
+PROJECT_LDFLAGS += -L/usr/local/Cellar/opencv/2.4.12_2/lib -lopencv_calib3d -lopencv_contrib -lopencv_core -lopencv_features2d -lopencv_flann -lopencv_gpu -lopencv_highgui -lopencv_imgproc -lopencv_legacy -lopencv_ml -lopencv_nonfree -lopencv_objdetect -lopencv_ocl -lopencv_photo -lopencv_stitching -lopencv_superres -lopencv_ts -lopencv_video -lopencv_videostab
+
 
 ################################################################################
 # PROJECT DEFINES
@@ -105,7 +107,9 @@ PROJECT_LDFLAGS=-Wl,-rpath=./libs `pkg-config --libs opencv`
 #
 #   Note: Leave a leading space when adding list items with the += operator
 ################################################################################
-PROJECT_CFLAGS = `pkg-config --cflags opencv` 
+# PROJECT_CFLAGS = `pkg-config --cflags opencv` 
+PROJECT_CFLAGS = -I/usr/local/Cellar/opencv/2.4.12_2/include/opencv -I/usr/local/Cellar/opencv/2.4.12_2/include
+
 
 ################################################################################
 # PROJECT OPTIMIZATION CFLAGS

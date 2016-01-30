@@ -87,10 +87,10 @@ void nebulaBackground::update(ofPixels &img){
   if ( gpuMode ) {
     try  {
       d_input = input;
-      if ( m_algoName == "MOG" ){
-        m_oclMOG( d_input, d_fgmask );
-      } else if ( m_algoName == "MOG2" ){
-        m_oclMOG2( d_input, d_fgmask, 0.01f );
+      if ( m_algoName.substr(21) == "MOG" ){
+        m_oclMOG( d_input, d_fgmask, learningTime );
+      } else if ( m_algoName.substr(21) == "MOG2" ){
+        m_oclMOG2( d_input, d_fgmask, learningTime );
       } else {
         ofLogError("nebulaBackground") << "there is no GPU version of algo " << m_algoName;
         gpuMode = false;
@@ -104,7 +104,7 @@ void nebulaBackground::update(ofPixels &img){
       return;
     }
   } else if (!m_fgbg.empty()){
-    (*m_fgbg)(input, m_fgmask);
+    (*m_fgbg)(input, m_fgmask, learningTime);
     ofxCv::copy(m_fgmask, thresholded);
    } else {
     background.update(img, thresholded);

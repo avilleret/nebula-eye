@@ -1,0 +1,7 @@
+ofxCv
+ofxDepthStreamCompression
+ofxGStreamer
+ofxGstRTP
+ofxGui
+ofxOsc
+ofxSnappy

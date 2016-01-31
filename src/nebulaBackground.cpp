@@ -104,8 +104,12 @@ void nebulaBackground::update(ofPixels &img){
       return;
     }
   } else if (!m_fgbg.empty()){
-    (*m_fgbg)(input, m_fgmask, learningTime);
-    ofxCv::copy(m_fgmask, thresholded);
+    try {
+      (*m_fgbg)(input, m_fgmask, learningTime);
+      ofxCv::copy(m_fgmask, thresholded);
+    } catch (cv::Exception e) {
+      ofLogError("nebulaBackground") << "OpenCV error : " << e.code << " " << e.err << " : " << e.what();
+    }
    } else {
     background.update(img, thresholded);
   }

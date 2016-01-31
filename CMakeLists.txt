@@ -25,6 +25,7 @@ set(SOURCES
     src/nebulaBackground.cpp
     src/nebulaContourFinder.cpp
     src/nebulaFlow.cpp
+    src/nebulaUtils.cpp
     src/nebulaVideoSrc.cpp
     src/nebulaZone.cpp
 )

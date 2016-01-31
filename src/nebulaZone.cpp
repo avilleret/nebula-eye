@@ -7,6 +7,7 @@
 //
 
 #include "nebulaZone.h"
+#include <algorithm> // std::max
 
 // the static event, or any static variable, must be initialized outside of the class definition.
 ofEvent<ofVec2f> nebula::Zone::clickedInsideGlobal = ofEvent<ofVec2f>();
@@ -30,7 +31,9 @@ void nebula::Zone::setup(){
 
     guiGrp.add(radius.set("zone radius", ofVec3f(20, 120, 400), ofVec3f(20,20,20), ofVec3f(ofGetWidth()/2)));
     guiGrp.add(center.set("center", ofVec2f(ofGetWidth()/2, ofGetHeight()/2), ofVec2f(0,0), ofVec2f(ofGetWidth(), ofGetHeight())));
+    guiGrp.add(angleOrigin.set("ref axis",0,-180,180));
 }
+
 void nebula::Zone::draw(){
     ofPushStyle();
     ofSetColor(color);
@@ -39,6 +42,9 @@ void nebula::Zone::draw(){
     ofNoFill();
     ofDrawCircle(center.get(), radius->y);
     ofDrawCircle(center.get(), radius->z);
+    ofVec2f originPol = ofVec2f(radius->x,ofDegToRad(angleOrigin.get()));
+    ofVec2f originCar = nebula::Utils::polToCar(originPol) + center;
+    ofDrawLine(center.get(),originCar);
     ofPopStyle();
 }
 
@@ -58,6 +64,8 @@ void nebula::Zone::mouseDragged(ofMouseEventArgs & args){
       } else {
         float dist = std::max(args.distance(center),float(10.));
         radius.set(ofVec3f(dist,radius->y, radius->z));
+        ofVec2f vect = args - center;
+        angleOrigin.set(-vect.angle(ofVec2f(1,0)));
       }
       break;
     case 1:

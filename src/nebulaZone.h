@@ -9,6 +9,7 @@
 #pragma once
 
 #include "ofMain.h"
+#include "nebulaUtils.h"
 
 namespace nebula {
 
@@ -40,11 +41,12 @@ namespace nebula {
     void mouseEntered(ofMouseEventArgs & args);
     void mouseExited(ofMouseEventArgs & args);
 
-    //this function checks if the passed arguments are inside the circle.
+    //this function checks in which zone the passed arguments are.
     int inside(ofVec2f pt, ofVec3f rad);
     ofParameterGroup guiGrp;
     ofParameter<ofVec2f> center;
     ofParameter<ofVec3f> radius;
+    ofParameter<float> angleOrigin;
     ofColor color;
     int zcatch; // zone dragged, -1 if mouse is released
 

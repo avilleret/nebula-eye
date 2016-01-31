@@ -47,7 +47,6 @@ namespace nebula {
     ofParameter<ofVec2f> center;
     ofParameter<ofVec3f> radius;
     ofParameter<float> angleOrigin;
-    ofColor color;
     int zcatch; // zone dragged, -1 if mouse is released
 
   protected:

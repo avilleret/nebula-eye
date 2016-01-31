@@ -22,7 +22,6 @@ nebula::Zone::~Zone() {
 
 void nebula::Zone::setup(){
 
-    color=ofColor(255,0,0, 64);
     if(!bRegisteredEvents) {
         ofRegisterMouseEvents(this); // this will enable our circle class to listen to the mouse events.
         bRegisteredEvents = true;
@@ -36,7 +35,6 @@ void nebula::Zone::setup(){
 
 void nebula::Zone::draw(){
     ofPushStyle();
-    ofSetColor(color);
     ofFill();
     ofDrawCircle(center.get(), radius->x);
     ofNoFill();

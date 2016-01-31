@@ -257,8 +257,17 @@ void nebulaBackground::initBgsubGui(){
                                           defaultValue,
                                           defaultValue!=0 ? defaultValue/4 : 0,
                                           defaultValue!=0 ? defaultValue*4 : 100));
-      bgsubParameters[i].addListener(this, &nebulaBackground::parameterChanged);
+      if (m_algoName.substr(21) == "MOG"){
+        if ( bgsubParameters[i].getName() == "nmixtures") {
+          bgsubParameters[i].setMax(11);
+          bgsubParameters[i].setMin(0);
+        } if ( bgsubParameters[i].getName() == "backgroundRatio") {
+          bgsubParameters[i].setMax(1);
+          bgsubParameters[i].setMin(0);
+        }
       }
+      bgsubParameters[i].addListener(this, &nebulaBackground::parameterChanged);
+    }
   } else {
     ofLogVerbose("nebulaBackground") << 0 << " Learning time";
     ofLogVerbose("nebulaBackground") << 1 << " Treshold";

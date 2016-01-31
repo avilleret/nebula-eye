@@ -2,21 +2,18 @@
 
 void nebulaEye::setup()
 {
-  roiGuiGrp.setName("ROI");
-  roiGuiGrp.add(radius.set("rayon", 250, 1 , ofGetWidth()/2));
-  roiGuiGrp.add(center.set("centre", ofPoint(ofGetWidth()/2, ofGetHeight()/2), ofPoint(0,0), ofPoint(ofGetWidth(), ofGetHeight())));
-
   video.setup();
   flow.setup();
   bgSub.setup();
   contour.setup();
+  zone.setup();
 
   gui.setup("nebula-eye","settings.xml",660,10);
   gui.add(video.guiGrp);
-  gui.add(roiGuiGrp);
   gui.add(bgSub.guiGrp);
   gui.add(flow.guiGrp);
   gui.add(contour.guiGrp);
+  gui.add(zone.guiGrp);
 
   gui.loadFromFile("settings.xml");
 
@@ -45,8 +42,7 @@ void nebulaEye::draw()
   flow.draw(0,480, 640, 480);
   contour.draw(0,0,640,480);
 
-  //ofSetColor(255,255,255,128);
-  //ofDrawCircle(center->x, center->y, radius);
+  zone.draw();
   gui.draw();
 }
 

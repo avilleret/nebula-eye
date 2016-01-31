@@ -8,6 +8,7 @@
 #include "nebulaFlow.h"
 #include "nebulaBackground.h"
 #include "nebulaContourFinder.h"
+#include "nebulaZone.h"
 
 class nebulaEye : public ofBaseApp
 {
@@ -27,15 +28,11 @@ class nebulaEye : public ofBaseApp
     void learningTimeChanged(int & _time);
     void thresholdChanged(int & tresh);
 
-    ofParameter<ofVec2f> center;
-    ofParameter<float> radius;
-
-    ofParameterGroup roiGuiGrp;
-
     ofxPanel gui;
 
     nebulaVideoSrc video;
     nebulaFlow flow;
     nebulaBackground bgSub;
     nebulaContourFinder contour;
+    nebula::Zone zone;
 };

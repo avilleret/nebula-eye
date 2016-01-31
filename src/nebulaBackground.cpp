@@ -209,6 +209,18 @@ void nebulaBackground::initBgsubGui(){
   vector<string> paramList;
   bgsubParameters.clear();
 
+  if( m_algoName.length() < 21 ){ // check length first
+      bgsubGui.add(learningTime.set("Learning time", 10, 0, 100));
+  } else if ( m_algoName.substr(21) == "MOG" ){
+    bgsubGui.add(learningTime.set("Learning rate", 0, 0, 1));
+  } else if ( m_algoName.substr(21) == "MOG2" ) {
+    bgsubGui.add(learningTime.set("Learning rate", 1, 0, 10));
+  } else if ( m_algoName.substr(21) == "GMG" ) {
+    bgsubGui.add(learningTime.set("Learning rate", 0.7, 0, 1));
+  } else {
+    bgsubGui.add(learningTime.set("Learning time", 10, 0, 100));
+  }
+
   if (!m_fgbg.empty()){
     m_fgbg->getParams(paramList);
     for (size_t i=0; i < paramList.size(); i++){

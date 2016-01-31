@@ -56,7 +56,8 @@ void nebula::Zone::mouseDragged(ofMouseEventArgs & args){
       if ( args.button ){
         center.set(args);
       } else {
-        radius.set(ofVec3f(args.distance(center),radius->y, radius->z));
+        float dist = std::max(args.distance(center),float(10.));
+        radius.set(ofVec3f(dist,radius->y, radius->z));
       }
       break;
     case 1:

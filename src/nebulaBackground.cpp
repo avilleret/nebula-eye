@@ -8,7 +8,6 @@ void nebulaBackground::setup(){
   ofSetLogLevel(OF_LOG_VERBOSE);
   guiGrp.setName("Background substraction");
   guiGrp.add(enabled.set("enable",true));
-  guiGrp.add(learningTime.set("Learning time", 10, 0, 100));
   guiGrp.add(threshold.set("threshold", 60, 0, 255));
   guiGrp.add(algoClassic.set("use common algo", false));
   guiGrp.add(algoGMG.set("use GMG algo", true));
@@ -133,7 +132,7 @@ void nebulaBackground::draw(int x, int y, int w, int h){
     ofDrawBitmapStringHighlight("GPU Mode", ofPoint(x+10,y+10), ofColor(255,0,0), ofColor(255,255,255));
 }
 
-void nebulaBackground::learningTimeChanged(int & t){
+void nebulaBackground::learningTimeChanged(float & t){
   background.setLearningTime(t);
 }
 
@@ -187,19 +186,20 @@ void nebulaBackground::initAlgo(){
   else m_algoName = "Common";
 
   ofLogVerbose("nebulaBackground") << "Try to load algo " << m_algoName;
-
-   for ( int i = 0; i < m_bgsub_algos.size(); i++){
-    if (  m_bgsub_algos[i] == m_algoName ){
-      if ( m_bgsub_algos[i] == "BackgroundSubtractor.GMG"){
-        m_fgbg = cv::Algorithm::create<cv::BackgroundSubtractorGMG>(m_bgsub_algos[i]);
-      } else {
-        m_fgbg = cv::Algorithm::create<cv::BackgroundSubtractor>(m_bgsub_algos[i]);
-      }
-      if (m_fgbg.empty() )
-      {
-        ofLogError("nebulaBackground") << "Failed to create " <<  m_bgsub_algos[i] << " algo.";
-      } else {
-        ofLogVerbose("nebulaBackground") << "bgsub " << i << " : " << m_bgsub_algos[i] << " created.";
+  if( m_algoName != "Common"){
+    for ( int i = 0; i < m_bgsub_algos.size(); i++){
+      if (  m_bgsub_algos[i] == m_algoName ){
+        if ( m_bgsub_algos[i] == "BackgroundSubtractor.GMG"){
+          m_fgbg = cv::Algorithm::create<cv::BackgroundSubtractorGMG>(m_bgsub_algos[i]);
+        } else {
+          m_fgbg = cv::Algorithm::create<cv::BackgroundSubtractor>(m_bgsub_algos[i]);
+        }
+        if (m_fgbg.empty() )
+        {
+          ofLogError("nebulaBackground") << "Failed to create " <<  m_bgsub_algos[i] << " algo.";
+        } else {
+          ofLogVerbose("nebulaBackground") << "bgsub " << i << " : " << m_bgsub_algos[i] << " created.";
+        }
       }
     }
   }
@@ -211,17 +211,24 @@ void nebulaBackground::initBgsubGui(){
   bgsubGui.setName(m_algoName);
   vector<string> paramList;
   bgsubParameters.clear();
+  bgsubGui.add(learningTime.set("Learning time", 10, 0, 100));
+
 
   if( m_algoName.length() < 21 ){ // check length first
-      bgsubGui.add(learningTime.set("Learning time", 10, 0, 100));
+    // pass
   } else if ( m_algoName.substr(21) == "MOG" ){
-    bgsubGui.add(learningTime.set("Learning rate", 0, 0, 1));
+    learningTime.setMax(1);
+    learningTime.setMin(0);
+    learningTime = 0.;
   } else if ( m_algoName.substr(21) == "MOG2" ) {
-    bgsubGui.add(learningTime.set("Learning rate", 1, 0, 10));
+    learningTime.setMax(10);
+    learningTime.setMin(0);
+    learningTime = 1.;
   } else if ( m_algoName.substr(21) == "GMG" ) {
+    learningTime.setMax(1);
+    learningTime.setMin(0);
+    learningTime = 0.7;
     bgsubGui.add(learningTime.set("Learning rate", 0.7, 0, 1));
-  } else {
-    bgsubGui.add(learningTime.set("Learning time", 10, 0, 100));
   }
 
   if (!m_fgbg.empty()){
@@ -274,7 +281,7 @@ void nebulaBackground::initBgsubGui(){
   } else {
     ofLogVerbose("nebulaBackground") << 0 << " Learning time";
     ofLogVerbose("nebulaBackground") << 1 << " Treshold";
-    paramList.push_back("Learning time");
+    paramList.push_back("Learning time"); // TODO move those pararmeters from global panel to algo one
     paramList.push_back("Threshold");
   }
 
@@ -290,7 +297,7 @@ void nebulaBackground::saveAlgoParam(){
 }
 
 void nebulaBackground::parameterChanged(float& v){
-  ofLogVerbose("nebulaBackground") << "update algo paramters";
+  ofLogVerbose("nebulaBackground") << "--- update algo paramters" << std::endl;
   for (size_t i=0; i < bgsubParameters.size(); i++){
       ofLogVerbose("nebulaBackground") << bgsubParameters[i].getName() << " : " << bgsubParameters[i];
       if(gpuMode){
@@ -302,6 +309,7 @@ void nebulaBackground::parameterChanged(float& v){
             } else if  ( "noiseSigma" == bgsubParameters[i].getName() ){
               m_oclMOG.noiseSigma=bgsubParameters[i];
             } else if  ( "nmixtures" == bgsubParameters[i].getName() ){
+              bgsubParameters[i]=int(bgsubParameters[i]);
               m_oclMOG.varThreshold=bgsubParameters[i];
             }
         } else if ( m_algoName.substr(21) == "MOG2" ){
@@ -312,7 +320,8 @@ void nebulaBackground::parameterChanged(float& v){
             } else if  ( "detectShadows" == bgsubParameters[i].getName() ){
               m_oclMOG2.bShadowDetection=bgsubParameters[i];
             }  else if ( "nShadowDetection" == bgsubParameters[i].getName() ){
-                m_oclMOG2.nShadowDetection=bgsubParameters[i];
+                // m_oclMOG2.nShadowDetection=bgsubParameters[i];
+                // m_oclMOG2.nShadowDetection=0;
             } else if  ( "fCT" == bgsubParameters[i].getName() ){
               m_oclMOG2.fCT=bgsubParameters[i];
             } else if  ( "fTau" == bgsubParameters[i].getName() ){
@@ -332,6 +341,8 @@ void nebulaBackground::parameterChanged(float& v){
         m_fgbg->setDouble(bgsubParameters[i].getName(), bgsubParameters[i]);
       }
   }
+  ofLogVerbose("nebulaBackground") << "--- parameter update done";
+
 }
 
 void nebulaBackground::showGui(bool & flag){

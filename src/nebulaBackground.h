@@ -6,7 +6,7 @@
 
 class nebulaBackground {
 public:
-    void learningTimeChanged(int & t);
+    void learningTimeChanged(float & t);
     void thresholdChanged(int & thresh);
     void algoMOGCb(bool & flag);
     void algoMOG2Cb(bool & flag);
@@ -29,7 +29,8 @@ public:
     ofImage thresholded;
 
     ofParameterGroup guiGrp;
-    ofParameter<int> threshold, learningTime;
+    ofParameter<int> threshold;
+    ofParameter<float> learningTime;
     ofParameter<bool> enabled, algoClassic, algoGMG, algoMOG, algoMOG2, showBgsubGui, forceCPU;
     bool gpuMode, m_showGui;
 

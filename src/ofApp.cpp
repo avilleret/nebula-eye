@@ -52,14 +52,17 @@ void nebulaEye::update()
 
 void nebulaEye::draw()
 {
-  int w, h;
-  if ( ofGetWidth()/ofGetHeight() > img.getWidth()/img.getHeight()){
-    h = ofGetHeight();
-    w = h * img.getWidth()/img.getHeight();
-  } else {
-    w = ofGetWidth();
-    h = w * img.getHeight()/img.getWidth();
+  int w(ofGetWidth()), h(ofGetHeight());
+  if ( ( ofGetHeight() > 0 && img.getHeight() > 0 ) ) {
+    if ( ofGetWidth()/ofGetHeight() > img.getWidth()/img.getHeight()){
+      h = ofGetHeight();
+      w = h * img.getWidth()/img.getHeight();
+    } else if (img.getWidth()>0){
+      w = ofGetWidth();
+      h = w * img.getHeight()/img.getWidth();
+    }
   }
+    
   // ofLogVerbose("ofApp") << "drawing resolution  : " << w << " x " << h;
   ofSetColor(255,255,255);
   if(showVideo)

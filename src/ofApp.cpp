@@ -27,6 +27,7 @@ void nebulaEye::setup()
 
   ofAddListener(gui.savePressedE, &bgSub, &nebulaBackground::saveAlgoParam);
   showGui.addListener(&bgSub, &nebulaBackground::showGui);
+  showZone.addListener(&zone, &nebula::Zone::attach);
 
   gui.loadFromFile("settings.xml");
 

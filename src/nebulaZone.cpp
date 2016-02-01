@@ -36,6 +36,7 @@ void nebula::Zone::setup(){
 void nebula::Zone::draw(){
     ofPushStyle();
     ofFill();
+    ofSetLineWidth(3);
     ofDrawCircle(center.get(), radius->x);
     ofNoFill();
     ofDrawCircle(center.get(), radius->y);
@@ -92,4 +93,14 @@ int nebula::Zone::inside(ofVec2f pt, ofVec3f rad){
   if ( pt.distance(center) < rad.y ) return 1;
   if ( pt.distance(center) < rad.z ) return 2;
   else return -1;
+}
+
+void nebula::Zone::attach(bool & flag){
+  if (flag && !bRegisteredEvents){
+    ofRegisterMouseEvents(this); // this will enable our circle class to listen to the mouse events.
+    bRegisteredEvents = true;
+  } else if (!flag && bRegisteredEvents){
+    ofUnregisterMouseEvents(this); // this will enable our circle class to listen to the mouse events.
+    bRegisteredEvents = false;
+  }
 }

@@ -32,10 +32,11 @@ void nebulaContourFinder::draw(int x, int y, int w, int h){
   if(!enabled) return;
   ofxCv::RectTracker& tracker = contourFinder.getTracker();
 
-  fbo.begin();
+  ofPushMatrix();
+  ofScale(w/blurred.getWidth(), h/blurred.getHeight());
+  ofTranslate(x,y);
+
   if(showLabels) {
-    ofClear(0, 0, 0, 0);
-    ofSetColor(255);
     contourFinder.draw();
     for(int i = 0; i < contourFinder.size(); i++) {
       ofPoint center = ofxCv::toOf(contourFinder.getCenter(i));
@@ -44,6 +45,9 @@ void nebulaContourFinder::draw(int x, int y, int w, int h){
       int label = contourFinder.getLabel(i);
       string msg = ofToString(label) + ":" + ofToString(tracker.getAge(label));
       ofDrawBitmapString(msg, 0, 0);
+      ofDrawCircle(0,0,2);
+      msg = ofToString(contourFinder.getCentroid(i));
+      ofDrawBitmapString(msg, 0, 12);
       ofVec2f velocity = ofxCv::toOf(contourFinder.getVelocity(i));
       ofScale(5, 5);
       ofDrawLine(0, 0, velocity.x, velocity.y);
@@ -67,11 +71,7 @@ void nebulaContourFinder::draw(int x, int y, int w, int h){
       }
     }
   }
-  fbo.end();
 
-  fbo.draw(x,y,w,h);
-
-  ofPushMatrix();
   ofTranslate(x,y);
   // this chunk of code visualizes the creation and destruction of labels
   const vector<unsigned int>& currentLabels = tracker.getCurrentLabels();
@@ -99,6 +99,7 @@ void nebulaContourFinder::draw(int x, int y, int w, int h){
     ofDrawLine(j, 12, j, 16);
   }
   ofPopMatrix();
+  ofPopStyle();
 }
 
 void nebulaContourFinder::showLabelsCb(bool& flag){

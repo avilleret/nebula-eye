@@ -12,7 +12,7 @@ public:
 
       ofxCv::erode(img, blurred, erodeAmount);
       ofxCv::blur(blurred, blurAmount);
-      contourFinder.findContours(blurred);
+      finder.findContours(blurred);
     }
     void draw(int x, int y, int w, int h);
     void draw(int x, int y){draw(x,y,0,0);};
@@ -22,7 +22,7 @@ public:
     vector<ofPoint> getCentroids();
 
 //protected:
-    ofxCv::ContourFinder contourFinder;
+    ofxCv::ContourFinder finder;
     ofFbo fbo;
 
     ofParameterGroup guiGrp;

@@ -19,43 +19,43 @@ void nebulaContourFinder::setup(){
 
   showLabels.addListener(this, &nebulaContourFinder::showLabelsCb);
 
-  contourFinder.setMinAreaRadius(minAreaRad);
-  contourFinder.setMaxAreaRadius(maxAreaRad);
-  contourFinder.setThreshold(threshold);
+  finder.setMinAreaRadius(minAreaRad);
+  finder.setMaxAreaRadius(maxAreaRad);
+  finder.setThreshold(threshold);
   // wait for half a frame before forgetting something
-  contourFinder.getTracker().setPersistence(persistence);
+  finder.getTracker().setPersistence(persistence);
   // an object can move up to 32 pixels per frame
-  contourFinder.getTracker().setMaximumDistance(maxDistance);
+  finder.getTracker().setMaximumDistance(maxDistance);
 }
 
 void nebulaContourFinder::draw(int x, int y, int w, int h){
   if(!enabled) return;
-  ofxCv::RectTracker& tracker = contourFinder.getTracker();
+  ofxCv::RectTracker& tracker = finder.getTracker();
 
   ofPushMatrix();
   ofScale(w/blurred.getWidth(), h/blurred.getHeight());
   ofTranslate(x,y);
 
   if(showLabels) {
-    contourFinder.draw();
-    for(int i = 0; i < contourFinder.size(); i++) {
-      ofPoint center = ofxCv::toOf(contourFinder.getCenter(i));
+    finder.draw();
+    for(int i = 0; i < finder.size(); i++) {
+      ofPoint center = ofxCv::toOf(finder.getCenter(i));
       ofPushMatrix();
       ofTranslate(center.x, center.y);
-      int label = contourFinder.getLabel(i);
+      int label = finder.getLabel(i);
       string msg = ofToString(label) + ":" + ofToString(tracker.getAge(label));
       ofDrawBitmapString(msg, 0, 0);
       ofDrawCircle(0,0,2);
-      msg = ofToString(contourFinder.getCentroid(i));
+      msg = ofToString(finder.getCentroid(i));
       ofDrawBitmapString(msg, 0, 12);
-      ofVec2f velocity = ofxCv::toOf(contourFinder.getVelocity(i));
+      ofVec2f velocity = ofxCv::toOf(finder.getVelocity(i));
       ofScale(5, 5);
       ofDrawLine(0, 0, velocity.x, velocity.y);
       ofPopMatrix();
     }
   } else {
-    for(int i = 0; i < contourFinder.size(); i++) {
-      unsigned int label = contourFinder.getLabel(i);
+    for(int i = 0; i < finder.size(); i++) {
+      unsigned int label = finder.getLabel(i);
       // only draw a line if this is not a new label
       if(tracker.existsPrevious(label)) {
         // use the label to pick a random color
@@ -112,8 +112,8 @@ void nebulaContourFinder::showLabelsCb(bool& flag){
 
 vector<ofPoint> nebulaContourFinder::getCentroids(){
   vector<ofPoint> centroids;
-  for (int i = 0; i < contourFinder.size(); i++){
-       centroids.push_back(ofxCv::toOf(contourFinder.getCentroid(i)));
+  for (int i = 0; i < finder.size(); i++){
+       centroids.push_back(ofxCv::toOf(finder.getCentroid(i)));
     }
   return centroids;
 }

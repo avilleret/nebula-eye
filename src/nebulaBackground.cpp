@@ -197,6 +197,7 @@ void nebulaBackground::initAlgo(){
           ofLogError("nebulaBackground") << "Failed to create " <<  m_bgsub_algos[i] << " algo.";
         } else {
           ofLogVerbose("nebulaBackground") << "bgsub " << i << " : " << m_bgsub_algos[i] << " created.";
+          gpuMode = true;
         }
       }
     }

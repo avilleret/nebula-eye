@@ -22,6 +22,7 @@ public:
     void initBgsubGui();
     void saveAlgoParam();
     void parameterChanged(float& v);
+    void showGui(bool & flag);
 
 //protected:
     ofxCv::RunningBackground background;
@@ -31,7 +32,7 @@ public:
     ofParameterGroup guiGrp;
     ofParameter<int> threshold, learningTime;
     ofParameter<bool> enabled, algoClassic, algoGMG, algoMOG, algoMOG2, showBgsubGui, forceCPU;
-    bool gpuMode;
+    bool gpuMode, m_showGui;
 
     //std::vector<std::unique_ptr<ofAbstractParameter>> bgsubParameters;
     std::vector<ofParameter<float> > bgsubParameters;

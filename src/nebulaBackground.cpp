@@ -127,7 +127,7 @@ void nebulaBackground::draw(int x, int y, int w, int h){
   if(!enabled) return;
   if ( thresholded.isAllocated() )
     thresholded.draw(x,y,w,h);
-  if ( showBgsubGui )
+  if ( showBgsubGui && m_showGui )
     bgsubGui.draw();
   if ( gpuMode )
     ofDrawBitmapStringHighlight("GPU Mode", ofPoint(x+10,y+10), ofColor(255,0,0), ofColor(255,255,255));
@@ -336,4 +336,8 @@ void nebulaBackground::parameterChanged(float& v){
         m_fgbg->setDouble(bgsubParameters[i].getName(), bgsubParameters[i]);
       }
   }
+}
+
+void nebulaBackground::showGui(bool & flag){
+  m_showGui = flag;
 }

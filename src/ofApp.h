@@ -24,11 +24,14 @@ class nebulaEye : public ofBaseApp
     void mouseScrolled(ofMouseEventArgs& mouse);
     void mouseEntered(ofMouseEventArgs& mouse);
     void mouseExited(ofMouseEventArgs& mouse);
+    void keyPressed(int key);
 
     void learningTimeChanged(int & _time);
     void thresholdChanged(int & tresh);
 
     ofxPanel gui;
+    ofParameterGroup displayGuiGrp;
+    ofParameter<bool> showGui, showVideo, showBgSub, showContour, showFlow, showZone;
 
     nebulaVideoSrc video;
     nebulaFlow flow;

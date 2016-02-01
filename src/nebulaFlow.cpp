@@ -79,7 +79,20 @@ void nebulaFlow::update(ofPixels &img){
 
 void nebulaFlow::draw(int x, int y, int w, int h){
   if(!enabled) return;
-  flow.draw(x,y,w,h);
-  if ( gpuMode )
+  if ( gpuMode ){
     ofDrawBitmapStringHighlight("GPU Mode", ofPoint(x+10,y+10), ofColor(255,0,0), ofColor(255,255,255));
+      ofRectangle rect(x,y,w,h);
+      ofVec2f offset(rect.x,rect.y);
+      ofVec2f scale(rect.width/m_flow.cols, rect.height/m_flow.rows);
+      int stepSize = 4; //TODO: make class-level parameteric
+      for(int y = 0; y < m_flow.rows; y += stepSize) {
+          for(int x = 0; x < m_flow.cols; x += stepSize) {
+              ofVec2f cur = ofVec2f(x, y) * scale + offset;
+              const cv::Vec2f& vec = m_flow.at<cv::Vec2f>(y, x);
+              ofDrawLine(cur, ofVec2f(x + vec[0], y + vec[1]) * scale + offset);
+          }
+      }
+  } else {
+    flow.draw(x,y,w,h);
+  }
 }

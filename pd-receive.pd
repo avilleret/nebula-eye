@@ -1,0 +1,21 @@
+#N canvas 642 231 450 300 10;
+#X obj 135 122 mrpeach/udpreceive 123456;
+#X obj 135 144 mrpeach/unpackOSC;
+#X obj 135 166 mrpeach/routeOSC /b;
+#X obj 70 227 print;
+#X obj 70 206 spigot;
+#X obj 103 187 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 135 246 spigot;
+#X obj 168 227 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 135 267 print blob;
+#X text 184 224 comment;
+#X connect 0 0 1 0;
+#X connect 1 0 2 0;
+#X connect 1 0 4 0;
+#X connect 2 0 6 0;
+#X connect 4 0 3 0;
+#X connect 5 0 4 1;
+#X connect 6 0 8 0;
+#X connect 7 0 6 1;

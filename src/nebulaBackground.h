@@ -18,9 +18,8 @@ public:
     void update(ofPixels &img);
     void draw(int x, int y, int w, int h);
     void draw(int x, int y){draw(x,y,0,0);};
-    void save(); // save GUI parameters
     void initBgsubGui();
-    void saveAlgoParam();
+    void saveAlgoParam(); // save specific algo parameters
     void parameterChanged(float& v);
     void showGui(bool & flag);
 

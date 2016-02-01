@@ -206,10 +206,6 @@ void nebulaBackground::initAlgo(){
   initBgsubGui();
 }
 
-void nebulaBackground::save(){
-  bgsubGui.saveToFile(m_algoName + ".xml");
-}
-
 void nebulaBackground::initBgsubGui(){
   bgsubGui.clear();
   bgsubGui.setName(m_algoName);

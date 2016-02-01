@@ -47,9 +47,22 @@ void nebulaFlow::update(ofPixels &img){
     oclFbFlow.polyN=fbPolyN;
     oclFbFlow.polySigma=fbPolySigma;
 
-    cv::Mat input = ofxCv::toCv(img);
-    d_input = input;
+    cv::Mat input = ofxCv::toCv(img), gray;
+    if(input.channels() == 1){
+      gray = input;
+    } else {
+        cv::cvtColor(input, gray, CV_RGB2GRAY);
+    }
+    d_input = gray;
+    if ( m_flow.size()  != d_input.size() ) m_flow.create(d_input.size(), CV_32FC2);
+    if ( d_flow.size()  != d_input.size() ) d_flow.create(d_input.size(), CV_32FC2);
+    if ( d_prev.size()  != d_input.size() ) d_prev.create(d_input.size(), CV_8UC1);
+    if ( d_flowx.size() != d_input.size() ) d_flowx.create(d_input.size(), CV_32FC1);
+    if ( d_flowy.size() != d_input.size() ) d_flowy.create(d_input.size(), CV_32FC1);
     oclFbFlow(d_prev, d_input, d_flowx, d_flowy);
+    const vector<cv::ocl::oclMat> matVec = { d_flowx, d_flowy };
+    cv::ocl::merge(matVec, d_flow);
+    d_flow.download(m_flow);
     d_input.copyTo(d_prev); // TODO use copyTo to apply mask
   } else {
     flow.setPyramidScale(fbPyrScale);

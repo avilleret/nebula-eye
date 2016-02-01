@@ -29,11 +29,11 @@ void nebulaContourFinder::setup(){
 }
 
 void nebulaContourFinder::draw(int x, int y, int w, int h){
-  if(!enabled) return;
+    if(!enabled || blurred.size() == cv::Size(0,0)) return;
   ofxCv::RectTracker& tracker = finder.getTracker();
 
   ofPushMatrix();
-  ofScale(w/blurred.getWidth(), h/blurred.getHeight());
+  ofScale(w/blurred.cols, h/blurred.rows);
   ofTranslate(x,y);
 
   if(showLabels) {

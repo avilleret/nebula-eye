@@ -21,6 +21,7 @@ public:
     bool gpuMode;
 
     cv::ocl::FarnebackOpticalFlow oclFbFlow;
-    cv::ocl::oclMat d_prev, d_input, d_flowx, d_flowy; // d for "device"
+    cv::ocl::oclMat d_prev, d_input, d_flowx, d_flowy, d_flow; // d for "device"
     // cv::ocl::PyrLKOpticalFlow oclLKFLow;
+    cv::Mat m_flow;
 };

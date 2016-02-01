@@ -82,6 +82,10 @@ void nebulaBackground::setup(){
 void nebulaBackground::update(ofPixels &img){
   if(!enabled) return;
 
+  if ( !thresholded.isAllocated() || img.getWidth() != thresholded.getWidth() || img.getHeight() != thresholded.getHeight() ){
+    thresholded.allocate(img.getWidth(), img.getHeight(), OF_IMAGE_COLOR_ALPHA);
+  }
+
   // ofImage img = ofImage(px);
   cv::Mat input = ofxCv::toCv(img);
   if ( gpuMode ) {
@@ -106,13 +110,16 @@ void nebulaBackground::update(ofPixels &img){
   } else if (!m_fgbg.empty()){
     try {
       (*m_fgbg)(input, m_fgmask, learningTime);
-      ofxCv::copy(m_fgmask, thresholded);
     } catch (cv::Exception e) {
       ofLogError("nebulaBackground") << "OpenCV error : " << e.code << " " << e.err << " : " << e.what();
     }
    } else {
-    background.update(img, thresholded);
+    background.update(img, m_fgmask);
   }
+  ofImage bg;
+  cv::Mat inv = ~m_fgmask;
+  ofxCv::toOf(inv, bg);
+  thresholded.getPixels().setChannel(4,bg);
   thresholded.update();
 }
 

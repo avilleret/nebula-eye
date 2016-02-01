@@ -32,10 +32,13 @@ class nebulaEye : public ofBaseApp
     ofxPanel gui;
     ofParameterGroup displayGuiGrp;
     ofParameter<bool> showGui, showVideo, showBgSub, showContour, showFlow, showZone;
+    ofParameter<int> bgSubIntensity;
 
     nebulaVideoSrc video;
     nebulaFlow flow;
     nebulaBackground bgSub;
     nebulaContourFinder contour;
     nebula::Zone zone;
+
+    ofPixels img;
 };

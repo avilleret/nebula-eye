@@ -33,14 +33,14 @@ void nebulaEye::setup()
 
   ofSetCircleResolution(100);
 
-  ofSetBackgroundColor(0);
+  ofSetBackgroundColor(0,0,0,0);
 }
 
 void nebulaEye::update()
 {
   video.update();
   if(video.isFrameNew()){
-    auto img = video.getPixels();
+    img = video.getPixels();
     bgSub.update(img);
     flow.update(img);
     contour.update(bgSub.m_fgmask);

@@ -8,6 +8,7 @@ void nebulaBackground::setup(){
   ofSetLogLevel(OF_LOG_VERBOSE);
   guiGrp.setName("Background substraction");
   guiGrp.add(enabled.set("enable",true));
+  guiGrp.add(forceCPU.set("force CPU", false));
   guiGrp.add(threshold.set("threshold", 60, 0, 255));
   guiGrp.add(algoClassic.set("use common algo", false));
   guiGrp.add(algoGMG.set("use GMG algo", true));
@@ -15,9 +16,7 @@ void nebulaBackground::setup(){
   guiGrp.add(algoMOG2.set("use MOG2 algo",false));
   guiGrp.add(showBgsubGui.set("show bgsub parameters",true));
 
-  learningTime.addListener(this, &nebulaBackground::learningTimeChanged);
   threshold.addListener(this, &nebulaBackground::thresholdChanged);
-  background.setLearningTime(learningTime);
   background.setThresholdValue(threshold);
 
   algoClassic.addListener(this, &nebulaBackground::algoClassicCb);
@@ -85,9 +84,8 @@ void nebulaBackground::update(ofPixels &img){
     thresholded.allocate(img.getWidth(), img.getHeight(), OF_IMAGE_COLOR_ALPHA);
   }
 
-  // ofImage img = ofImage(px);
   cv::Mat input = ofxCv::toCv(img);
-  if ( gpuMode ) {
+  if ( gpuMode && !forceCPU ) {
     try  {
       d_input = input;
       if ( m_algoName.substr(21) == "MOG" ){
@@ -212,9 +210,10 @@ void nebulaBackground::initBgsubGui(){
   vector<string> paramList;
   bgsubParameters.clear();
   bgsubGui.add(learningTime.set("Learning time", 10, 0, 100));
+  learningTime.removeListener(this, &nebulaBackground::learningTimeChanged);
 
-
-  if( m_algoName.length() < 21 ){ // check length first
+  if( m_algoName == "Common" ){
+    learningTime.addListener(this, &nebulaBackground::learningTimeChanged);
     // pass
   } else if ( m_algoName.substr(21) == "MOG" ){
     learningTime.setMax(1);
@@ -224,7 +223,7 @@ void nebulaBackground::initBgsubGui(){
     learningTime.setMax(10);
     learningTime.setMin(0);
     learningTime = 1.;
-  } else if ( m_algoName.substr(21) == "GMG" ) {
+  } else if ( m_algoName.substr(21) == "GMG" && !gpuMode) {
     learningTime.setMax(1);
     learningTime.setMin(0);
     learningTime = 0.7;
@@ -267,13 +266,17 @@ void nebulaBackground::initBgsubGui(){
                                           defaultValue,
                                           defaultValue!=0 ? defaultValue/4 : 0,
                                           defaultValue!=0 ? defaultValue*4 : 100));
-      if (m_algoName.substr(21) == "MOG"){
+      // set min and max to avoid crash
+        if (m_algoName.substr(21) == "MOG"){
         if ( bgsubParameters[i].getName() == "nmixtures") {
           bgsubParameters[i].setMax(11);
           bgsubParameters[i].setMin(0);
         } if ( bgsubParameters[i].getName() == "backgroundRatio") {
           bgsubParameters[i].setMax(1);
           bgsubParameters[i].setMin(0);
+        } else if ( bgsubParameters[i].getName() == "learningTime") {
+            bgsubParameters[i].setMax(1);
+            bgsubParameters[i].setMin(0);
         }
       }
       bgsubParameters[i].addListener(this, &nebulaBackground::parameterChanged);

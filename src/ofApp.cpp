@@ -2,6 +2,7 @@
 
 void nebulaEye::setup()
 {
+  sender.setup(OSC_IP, OSC_PORT);
   video.setup();
   flow.setup();
   bgSub.setup();
@@ -44,6 +45,8 @@ void nebulaEye::update()
     bgSub.update(img);
     flow.update(img);
     contour.update(bgSub.m_fgmask);
+
+    sendOSC();
   }
 }
 
@@ -133,4 +136,19 @@ void nebulaEye::keyPressed(int key){
     default:
       break;
   }
+}
+
+void nebulaEye::sendOSC(){
+  ofxOscBundle bundle;
+  vector<ofPoint> centroids = contour.getCentroids();
+  for (int i = 0; i < centroids.size(); i++ ){
+    ofxOscMessage m;
+    std::stringstream address;
+    address << "/b/" << i;
+    m.setAddress(address.str());
+    m.addFloatArg(centroids[i].x);
+    m.addFloatArg(centroids[i].y);
+    bundle.addMessage(m);
+  }
+  sender.sendBundle(bundle);
 }

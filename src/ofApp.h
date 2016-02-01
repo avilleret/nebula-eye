@@ -3,12 +3,16 @@
 #include "ofMain.h"
 #include "ofxGui.h"
 #include "ofxCv.h"
+#include "ofxOsc.h"
 
 #include "nebulaVideoSrc.h"
 #include "nebulaFlow.h"
 #include "nebulaBackground.h"
 #include "nebulaContourFinder.h"
 #include "nebulaZone.h"
+
+#define OSC_IP "localhost"
+#define OSC_PORT 123456
 
 class nebulaEye : public ofBaseApp
 {
@@ -29,6 +33,8 @@ class nebulaEye : public ofBaseApp
     void learningTimeChanged(int & _time);
     void thresholdChanged(int & tresh);
 
+    void sendOSC();
+
     ofxPanel gui;
     ofParameterGroup displayGuiGrp;
     ofParameter<bool> showGui, showVideo, showBgSub, showContour, showFlow, showZone;
@@ -41,4 +47,6 @@ class nebulaEye : public ofBaseApp
     nebula::Zone zone;
 
     ofPixels img;
+    ofxOscSender sender;
+
 };

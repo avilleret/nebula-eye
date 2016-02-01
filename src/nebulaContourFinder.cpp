@@ -109,3 +109,11 @@ void nebulaContourFinder::showLabelsCb(bool& flag){
     fbo.end();
   }
 }
+
+vector<ofPoint> nebulaContourFinder::getCentroids(){
+  vector<ofPoint> centroids;
+  for (int i = 0; i < contourFinder.size(); i++){
+       centroids.push_back(ofxCv::toOf(contourFinder.getCentroid(i)));
+    }
+  return centroids;
+}

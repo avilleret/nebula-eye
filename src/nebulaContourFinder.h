@@ -19,6 +19,8 @@ public:
 
     void showLabelsCb(bool& flag);
 
+    vector<ofPoint> getCentroids();
+
 //protected:
     ofxCv::ContourFinder contourFinder;
     ofFbo fbo;

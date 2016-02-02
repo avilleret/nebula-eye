@@ -64,7 +64,7 @@ void nebulaFlow::update(ofPixels &img){
     const vector<cv::ocl::oclMat> matVec = { d_flowx, d_flowy };
     cv::ocl::merge(matVec, d_flow);
     d_flow.download(m_flow);
-    d_input.copyTo(d_prev); // TODO use copyTo to apply mask
+    d_input.copyTo(d_prev);
 
   } else {
     flow.setPyramidScale(fbPyrScale);
@@ -84,41 +84,27 @@ void nebulaFlow::draw(int x, int y, int w, int h){
   if(!enabled) return;
   if ( gpuMode ){
     ofDrawBitmapStringHighlight("GPU Mode", ofPoint(x+10,y+10), ofColor(255,0,0), ofColor(255,255,255));
-      ofRectangle rect(x,y,w,h);
-      ofVec2f offset(rect.x,rect.y);
-      ofVec2f scale(rect.width/m_flow.cols, rect.height/m_flow.rows);
-      int stepSize = 4; //TODO: make class-level parameteric
-      for(int y = 0; y < m_flow.rows; y += stepSize) {
-          for(int x = 0; x < m_flow.cols; x += stepSize) {
-              ofVec2f cur = ofVec2f(x, y) * scale + offset;
-              const cv::Vec2f& vec = m_flow.at<cv::Vec2f>(y, x);
-              ofDrawLine(cur, ofVec2f(x + vec[0], y + vec[1]) * scale + offset);
-          }
+    ofRectangle rect(x,y,w,h);
+    ofVec2f offset(rect.x,rect.y);
+    ofVec2f scale(rect.width/m_flow.cols, rect.height/m_flow.rows);
+    int stepSize = 4; //TODO: make class-level parameteric
+    for(int y = 0; y < m_flow.rows; y += stepSize) {
+      for(int x = 0; x < m_flow.cols; x += stepSize) {
+        ofVec2f cur = ofVec2f(x, y) * scale + offset;
+        const cv::Vec2f& vec = m_flow.at<cv::Vec2f>(y, x);
+        ofDrawLine(cur, ofVec2f(x + vec[0], y + vec[1]) * scale + offset);
       }
+    }
   } else {
     flow.draw(x,y,w,h);
   }
 }
 
-cv::Mat nebulaFlow::getFlowInMask(cv::Mat mask, ofVec2f & flowVec){
-  cv::Mat subFlow, _flow;
-
-  if( gpuMode ){
-    _flow = m_flow;
-  } else {
-    _flow = flow.getFlow();
+double nebulaFlow::getFlowInMask(cv::Mat mask, cv::Mat * subFlow){
+  if ( m_flow.size() != mask.size() ) return 0.;
+  if ( subFlow ){
+    m_flow.copyTo(*subFlow, mask);
   }
 
-  if ( _flow.size() != mask.size() ) return cv::Mat(1,1,CV_8UC1);
-  //ofxCv::imitate(subFlow,_flow);
-  ofLogVerbose("flow bug") << "_flow size : " << _flow.cols << " x " << _flow.rows ;
-  ofLogVerbose("flow bug") << "mask size : " << mask.cols << " x " << mask.rows ;
-  // TODO le flow en polaire ?
-  _flow.copyTo(subFlow, mask);
-  //cv::multiply(_flow, mask, subFlow);
-  cv::Scalar sum = cv::sum(subFlow);
-  // ofVec2f sumVec = ofVec2f(sum[0], sum[1]);
-
-  flowVec = nebula::Utils::carToPol(ofVec2f(sum[0], sum[1]));
-  return subFlow;
+  return cv::norm(m_flow, cv::NORM_L2, mask);
 }

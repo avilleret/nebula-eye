@@ -17,7 +17,7 @@ void nebulaEye::setup()
   displayGuiGrp.add(showContour.set("show contour",true));
   displayGuiGrp.add(showFlow.set("show motion flow",true));
   displayGuiGrp.add(showZone.set("show zone",true));
-  displayGuiGrp.add(showDebug.set("show flow mask",0,0,3));
+  displayGuiGrp.add(showDebug.set("show flow mask",0,0,4));
 
   gui.setup("nebula-eye","settings.xml",660,10);
   gui.add(displayGuiGrp);
@@ -70,12 +70,10 @@ void nebulaEye::update()
     rad = zone.radius.get()[1] * zoneMask[0].cols / ofGetWidth();
     cv::circle(zoneMask[2], center, rad, 0,-1);
 
-    vector<ofVec2f> zoneFlow;
-    zoneFlow.resize(zoneMask.size());
-
-    for ( int i = 0; i < zoneMask.size() ; i++ ){
-        flow.getFlowInMask(zoneMask[i], zoneFlow[i]);
-    }
+    // for the last zone, get a white image and draw a black circle
+    zoneMask.push_back( cv::Mat::ones(flow.m_flow.rows, flow.m_flow.cols , CV_8UC1)*255 );
+    rad = zone.radius.get()[2] * zoneMask[2].cols / ofGetWidth();
+    cv::circle(zoneMask[zoneMask.size()-1], center, rad, 0, -1);
 
     sendOSC();
   }
@@ -121,7 +119,26 @@ void nebulaEye::draw()
   if (showDebug){
     ofSetColor(255);
     int i = showDebug.get()-1;
-    ofxCv::drawMat(zoneMask[i],zoneMask[i].cols/2,zoneMask[i].rows/2);
+    ofRectangle rect = ofRectangle(zoneMask[i].cols/2,zoneMask[i].rows/2, zoneMask[i].cols, zoneMask[i].rows);
+    ofxCv::drawMat(zoneMask[i],rect.x, rect.y);
+    cv::Mat m_flow;
+    double zoneFlow = flow.getFlowInMask(zoneMask[i], &m_flow);
+    ofVec2f offset(rect.x,rect.y);
+    ofVec2f scale(rect.width/m_flow.cols, rect.height/m_flow.rows);
+    int stepSize = 4;
+    ofPopStyle();
+    ofSetColor(0,255,0);
+    for(int y = 0; y < m_flow.rows; y += stepSize) {
+      for(int x = 0; x < m_flow.cols; x += stepSize) {
+        ofVec2f cur = ofVec2f(x, y) * scale + offset;
+        const cv::Vec2f& vec = m_flow.at<cv::Vec2f>(y, x);
+        ofDrawLine(cur, ofVec2f(x + vec[0], y + vec[1]) * scale + offset);
+      }
+    }
+    ofPushStyle();
+    stringstream ss;
+    ss << "zone flow : " << zoneFlow;
+    ofDrawBitmapString(ss.str(), ofPoint(rect.x+10,rect.y-10));
   }
 
   if (showGui){

@@ -197,15 +197,24 @@ void nebulaEye::keyPressed(int key){
 
 void nebulaEye::sendOSC(){
   ofxOscBundle bundle;
-  vector<ofPoint> centroids = contour.getCentroids();
-  for (int i = 0; i < centroids.size(); i++ ){
-    ofxOscMessage m;
-    std::stringstream address;
-    address << "/b/" << i;
-    m.setAddress(address.str());
-    m.addFloatArg(centroids[i].x);
-    m.addFloatArg(centroids[i].y);
+  //vector<ofPoint> centroids = contour.getCentroids();
+  for (int i = 0; i < contour.finder.size(); i++ ){
+    ofxOscMessage m;    
+    m.setAddress("/b");
+    m.addInt32Arg(contour.finder.getLabel(i));
+    m.addFloatArg(contour.finder.getCentroid(i).x);
+    m.addFloatArg(contour.finder.getCentroid(i).y);
+    m.addFloatArg(contour.finder.getContourArea(i));
+    m.addInt32Arg(zone.inside(ofxCv::toOf(contour.finder.getCentroid(i))));
     bundle.addMessage(m);
   }
+
+  ofxOscMessage m;
+  m.setAddress("/f");
+  for ( int i = 0; i < zoneMask.size() ; i++ ){
+      double f = flow.getFlowInMask(zoneMask[i], NULL);
+      m.addFloatArg(f);
+  }
+  bundle.addMessage(m);
   sender.sendBundle(bundle);
 }

@@ -43,7 +43,7 @@ namespace nebula {
     void mouseExited(ofMouseEventArgs & args);
 
     //this function checks in which zone the passed arguments are.
-    int inside(ofVec2f pt, ofVec3f rad);
+    int inside(ofVec2f pt);
     ofParameterGroup guiGrp;
     ofParameter<ofVec2f> center;
     ofParameter<ofVec3f> radius;

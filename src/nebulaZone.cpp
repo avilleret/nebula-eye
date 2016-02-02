@@ -78,7 +78,7 @@ void nebula::Zone::mouseDragged(ofMouseEventArgs & args){
   }
 }
 void nebula::Zone::mousePressed(ofMouseEventArgs & args){
-  zcatch = inside(args, radius);
+  zcatch = inside(args);
 }
 void nebula::Zone::mouseReleased(ofMouseEventArgs & args){
   zcatch = -1;
@@ -88,11 +88,11 @@ void nebula::Zone::mouseEntered(ofMouseEventArgs & args){}
 void nebula::Zone::mouseExited(ofMouseEventArgs & args){}
 
 //this function checks if the passed arguments are inside the circle.
-int nebula::Zone::inside(ofVec2f pt, ofVec3f rad){
-  if ( pt.distance(center) < rad.x ) return 0;
-  if ( pt.distance(center) < rad.y ) return 1;
-  if ( pt.distance(center) < rad.z ) return 2;
-  else return -1;
+int nebula::Zone::inside(ofVec2f pt){
+  if ( pt.distance(center) < radius->x ) return 0;
+  if ( pt.distance(center) < radius->y ) return 1;
+  if ( pt.distance(center) < radius->z ) return 2;
+  else return 3;
 }
 
 void nebula::Zone::attach(bool & flag){

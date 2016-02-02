@@ -38,7 +38,7 @@ class nebulaEye : public ofBaseApp
     ofxPanel gui;
     ofParameterGroup displayGuiGrp;
     ofParameter<bool> showGui, showVideo, showBgSub, showContour, showFlow, showZone;
-    ofParameter<int> bgSubIntensity;
+    ofParameter<int> bgSubIntensity, showDebug;
 
     nebulaVideoSrc video;
     nebulaFlow flow;
@@ -48,5 +48,8 @@ class nebulaEye : public ofBaseApp
 
     ofPixels img;
     ofxOscSender sender;
+
+    vector<cv::Mat> zoneMask;
+
 
 };

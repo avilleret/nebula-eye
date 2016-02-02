@@ -17,6 +17,7 @@ void nebulaEye::setup()
   displayGuiGrp.add(showContour.set("show contour",true));
   displayGuiGrp.add(showFlow.set("show motion flow",true));
   displayGuiGrp.add(showZone.set("show zone",true));
+  displayGuiGrp.add(showDebug.set("show flow mask",0,0,3));
 
   gui.setup("nebula-eye","settings.xml",660,10);
   gui.add(displayGuiGrp);
@@ -45,6 +46,36 @@ void nebulaEye::update()
     bgSub.update(img);
     flow.update(img);
     contour.update(bgSub.m_fgmask);
+
+    // create zone mask
+    // TODO redraw only on zone change
+    zoneMask.resize(3);
+
+    ofVec2f scaledCenter = zone.center.get();
+
+    scaledCenter.x = float(scaledCenter.x) * float(flow.m_flow.cols)/ofGetWidth();
+    scaledCenter.y = float(scaledCenter.y) * float(flow.m_flow.rows)/ofGetHeight();
+    cv::Point center = ofxCv::toCv(scaledCenter);
+    for ( int i = 0; i < zoneMask.size() ; i++ ){
+      // clear everything
+      zoneMask[i] = cv::Mat::zeros(flow.m_flow.rows, flow.m_flow.cols , CV_8UC1);
+      // first draw a white filled circle
+      int rad = zone.radius.get()[i] * zoneMask[i].cols / ofGetWidth();
+      cv::circle(zoneMask[i], center, rad, cv::Scalar(255,255,255),-1);
+    }
+
+    int rad = zone.radius.get()[0] * zoneMask[0].cols / ofGetWidth();
+    // then add a black one into the white to mask the other zone(s)
+    cv::circle(zoneMask[1], center, rad, cv::Scalar(0),-1);
+    rad = zone.radius.get()[1] * zoneMask[0].cols / ofGetWidth();
+    cv::circle(zoneMask[2], center, rad, 0,-1);
+
+    vector<ofVec2f> zoneFlow;
+    zoneFlow.resize(zoneMask.size());
+
+    for ( int i = 0; i < zoneMask.size() ; i++ ){
+        flow.getFlowInMask(zoneMask[i], zoneFlow[i]);
+    }
 
     sendOSC();
   }
@@ -85,6 +116,12 @@ void nebulaEye::draw()
   if(showZone){
     ofSetColor(255,0,0,64);
     zone.draw();
+  }
+
+  if (showDebug){
+    ofSetColor(255);
+    int i = showDebug.get()-1;
+    ofxCv::drawMat(zoneMask[i],zoneMask[i].cols/2,zoneMask[i].rows/2);
   }
 
   if (showGui){

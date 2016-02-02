@@ -202,8 +202,12 @@ void nebulaEye::sendOSC(){
     ofxOscMessage m;    
     m.setAddress("/b");
     m.addInt32Arg(contour.finder.getLabel(i));
-    m.addFloatArg(contour.finder.getCentroid(i).x);
-    m.addFloatArg(contour.finder.getCentroid(i).y);
+    ofVec2f centroid = ofxCv::toOf(contour.finder.getCentroid(i));
+    centroid -= zone.center;
+    ofVec2f centroidPol = nebula::Utils::carToPol(centroid);
+    centroidPol.y -= zone.angleOrigin;
+    m.addFloatArg(centroidPol.x);
+    m.addFloatArg(centroidPol.y);
     m.addFloatArg(contour.finder.getContourArea(i));
     m.addInt32Arg(zone.inside(ofxCv::toOf(contour.finder.getCentroid(i))));
     bundle.addMessage(m);

@@ -2,6 +2,7 @@
 /* Motion flow computation class */
 /*********************************/
 #include "nebulaFlow.h"
+#include "nebulaUtils.h"
 
 void nebulaFlow::setup(){
     // setup flow parameter GUI
@@ -64,6 +65,7 @@ void nebulaFlow::update(ofPixels &img){
     cv::ocl::merge(matVec, d_flow);
     d_flow.download(m_flow);
     d_input.copyTo(d_prev); // TODO use copyTo to apply mask
+
   } else {
     flow.setPyramidScale(fbPyrScale);
     flow.setNumLevels(fbLevels);
@@ -74,6 +76,7 @@ void nebulaFlow::update(ofPixels &img){
     flow.setUseGaussian(fbUseGaussian);
 
     flow.calcOpticalFlow(img);
+    m_flow = flow.getFlow();
   }
 }
 
@@ -95,4 +98,27 @@ void nebulaFlow::draw(int x, int y, int w, int h){
   } else {
     flow.draw(x,y,w,h);
   }
+}
+
+cv::Mat nebulaFlow::getFlowInMask(cv::Mat mask, ofVec2f & flowVec){
+  cv::Mat subFlow, _flow;
+
+  if( gpuMode ){
+    _flow = m_flow;
+  } else {
+    _flow = flow.getFlow();
+  }
+
+  if ( _flow.size() != mask.size() ) return cv::Mat(1,1,CV_8UC1);
+  //ofxCv::imitate(subFlow,_flow);
+  ofLogVerbose("flow bug") << "_flow size : " << _flow.cols << " x " << _flow.rows ;
+  ofLogVerbose("flow bug") << "mask size : " << mask.cols << " x " << mask.rows ;
+  // TODO le flow en polaire ?
+  _flow.copyTo(subFlow, mask);
+  //cv::multiply(_flow, mask, subFlow);
+  cv::Scalar sum = cv::sum(subFlow);
+  // ofVec2f sumVec = ofVec2f(sum[0], sum[1]);
+
+  flowVec = nebula::Utils::carToPol(ofVec2f(sum[0], sum[1]));
+  return subFlow;
 }

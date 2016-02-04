@@ -8,8 +8,8 @@ void nebulaContourFinder::setup(){
   // setup contour finder parameter GUI
   guiGrp.setName("Blob tracker");
   guiGrp.add(enabled.set("enable",true));
-  guiGrp.add(minAreaRad.set("minimum area radius",1,0,320));
-  guiGrp.add(maxAreaRad.set("maximum area radius",100,0,320));
+  guiGrp.add(minAreaRad.set("minimum area radius",1,0,1000));
+  guiGrp.add(maxAreaRad.set("maximum area radius",100,0,1000));
   guiGrp.add(threshold.set("threshold",15,0,100));
   guiGrp.add(erodeAmount.set("erode",1,0,10));
   guiGrp.add(blurAmount.set("blur",10,0,100));

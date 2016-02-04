@@ -81,7 +81,7 @@ void nebulaBackground::update(ofPixels &img){
   if(!enabled) return;
 
   if ( !thresholded.isAllocated() || img.getWidth() != thresholded.getWidth() || img.getHeight() != thresholded.getHeight() ){
-    thresholded.allocate(img.getWidth(), img.getHeight(), img.getImageType() == OF_IMAGE_GRAYSCALE ? OF_IMAGE_GRAYSCALE : OF_IMAGE_COLOR);
+    thresholded.allocate(img.getWidth(), img.getHeight(), OF_IMAGE_COLOR_ALPHA);
   }
 
   cv::Mat input = ofxCv::toCv(img);
@@ -109,6 +109,7 @@ void nebulaBackground::update(ofPixels &img){
       (*m_fgbg)(input, m_fgmask, learningTime);
     } catch (cv::Exception e) {
       ofLogError("nebulaBackground") << "OpenCV error : " << e.code << " " << e.err << " : " << e.what();
+      return;
     }
    } else {
     background.update(img, m_fgmask);
@@ -116,13 +117,9 @@ void nebulaBackground::update(ofPixels &img){
   ofImage bg;
   cv::Mat inv = ~m_fgmask;
   ofxCv::toOf(inv, bg);
-  if (thresholded.getPixels().getImageType() == OF_IMAGE_GRAYSCALE){
-    thresholded=bg;
-  } else {
-    thresholded.setFromPixels(img);
-    thresholded.getPixels().setChannel(4,bg);
-    thresholded.update();
-  }
+    
+  thresholded.getPixels().setChannel(4,bg);
+  thresholded.update();
 }
 
 void nebulaBackground::draw(int x, int y, int w, int h){

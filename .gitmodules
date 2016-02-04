@@ -13,3 +13,6 @@ url=https://github.com/avilleret/ofxGstRTP.git
 [submodule "ofxCv"]
 	path = ofxCv
 	url = https://github.com/kylemcdonald/ofxCv.git
+[submodule "ofxOpenCv2"]
+	path = ofxOpenCv2
+	url = https://github.com/avilleret/ofxOpenCv2

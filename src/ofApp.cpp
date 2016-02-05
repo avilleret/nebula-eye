@@ -298,8 +298,8 @@ void nebulaEye::recordCSVData(){
 
   csvRecorder.setFloat(row,4,flowZone[0]);
   csvRecorder.setFloat(row,5,flowZone[1]);
-  csvRecorder.setFloat(row,5,flowZone[2]);
-  csvRecorder.setFloat(row,5,flowZone[3]);
+  csvRecorder.setFloat(row,6,flowZone[2]);
+  csvRecorder.setFloat(row,7,flowZone[3]);
 
 }
 

@@ -236,6 +236,8 @@ void nebulaEye::sendOSC(){
 void nebulaEye::csvRecordCb(bool & flag){
   if ( flag ){
     csvRecorder.clear();
+    ofResetElapsedTimeCounter();
+
     stringstream ss;
     ss << ofGetYear();
     ss << setfill('0') << setw(2) << ofGetMonth();
@@ -311,6 +313,6 @@ string nebulaEye::getDate(){
 
 string nebulaEye::getHour(){
   stringstream ss;
-  ss << setfill('0') << setw(2) << ofGetHours() << ":" << ofGetMinutes() << ":" << ofGetSeconds();
+  ss << setfill('0') << setw(2) << ofGetHours() << ":" << ofGetMinutes() << ":" << ofGetSeconds() << "." << setw(3) << int(fmod(float(ofGetElapsedTimeMillis()),1000.));
   return ss.str();
 }

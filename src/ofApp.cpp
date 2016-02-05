@@ -27,9 +27,13 @@ void nebulaEye::setup()
   gui.add(contour.guiGrp);
   gui.add(zone.guiGrp);
 
+  recordPanel.setup("record", "recordSetting.xml",10, ofGetHeight()-50);
+  recordPanel.add(record.set("recording",false));
+
   ofAddListener(gui.savePressedE, &bgSub, &nebulaBackground::saveAlgoParam);
   showGui.addListener(&bgSub, &nebulaBackground::showGui);
   showZone.addListener(&zone, &nebula::Zone::attach);
+  record.addListener(this, &nebulaEye::csvRecordCb);
 
   gui.loadFromFile("settings.xml");
 
@@ -76,6 +80,7 @@ void nebulaEye::update()
     cv::circle(zoneMask[zoneMask.size()-1], center, rad, 0, -1);
 
     sendOSC();
+    recordCSVData();
   }
 }
 
@@ -144,6 +149,8 @@ void nebulaEye::draw()
   if (showGui){
     gui.draw();
   }
+
+  recordPanel.draw();
 }
 
 void nebulaEye::exit()
@@ -215,10 +222,94 @@ void nebulaEye::sendOSC(){
 
   ofxOscMessage m;
   m.setAddress("/f");
+  flowZone.clear();
   for ( int i = 0; i < zoneMask.size() ; i++ ){
       double f = flow.getFlowInMask(zoneMask[i], NULL);
+      flowZone.push_back(f);
       m.addFloatArg(f);
   }
   bundle.addMessage(m);
   sender.sendBundle(bundle);
+}
+
+void nebulaEye::csvRecordCb(bool & flag){
+  if ( flag ){
+    csvRecorder.clear();
+    stringstream ss;
+    ss << ofGetYear();
+    ss << setfill('0') << setw(2) << ofGetMonth();
+    ss << setfill('0') << setw(2) << ofGetDay() << "-";
+    ss << setfill('0') << setw(2) << ofGetHours();
+    ss << setfill('0') << setw(2) << ofGetMinutes();
+    ss << setfill('0') << setw(2) << ofGetSeconds() << ".csv";
+    ofLog() << "try to create file : " << ss.str();
+    csvRecorder.filePath = ofToDataPath(ss.str());
+    ofLog() << "record CSV to : " << csvRecorder.filePath;
+
+    int idx(0);
+    csvRecorder.setString(0,idx++,"date");
+    csvRecorder.setString(0,idx++,"time");
+    csvRecorder.setString(0,idx++,"blob x");
+    csvRecorder.setString(0,idx++,"blob y");
+    csvRecorder.setString(0,idx++,"flow zone 0");
+    csvRecorder.setString(0,idx++,"flow zone 1");
+    csvRecorder.setString(0,idx++,"flow zone 2");
+    csvRecorder.setString(0,idx++,"flow zone 3");
+
+  } else {
+    csvRecorder.saveFile();
+    // Save the recorded values in the csvRecorder ofxCsv object
+    // csvRecorder.saveFile( ofToDataPath( csvFileName ));
+    ofLog() << "Saved " << csvRecorder.numRows << " rows to " << csvRecorder.filePath;
+  }
+}
+
+void nebulaEye::recordCSVData(){
+
+  if (!record) return;
+
+  int row = csvRecorder.numRows;
+  int idx = 0;
+  csvRecorder.setString(row, 0, getDate());
+  csvRecorder.setString(row, 1, getHour());
+
+  int area(0), biggest(-1);
+  for (int i = 0; i < contour.finder.size(); i++ ){
+    if ( contour.finder.getContourArea(i) > area ){
+        biggest = i;
+    }
+  }
+
+  if ( biggest != -1 ){
+    ofVec2f centroid = ofxCv::toOf(contour.finder.getCentroid(biggest));
+    centroid -= zone.center;
+    ofVec2f centroidPol = nebula::Utils::carToPol(centroid);
+    centroidPol.y -= zone.angleOrigin;
+    centroidPol.y = ofWrapDegrees(centroidPol.y);
+
+    csvRecorder.setFloat(row,2,centroidPol.x);
+    csvRecorder.setFloat(row,3,centroidPol.y);
+
+  } else {
+    csvRecorder.setString(row,2,"NA");
+    csvRecorder.setString(row,3,"NA");
+  }
+
+  csvRecorder.setFloat(row,4,flowZone[0]);
+  csvRecorder.setFloat(row,5,flowZone[1]);
+  csvRecorder.setFloat(row,5,flowZone[2]);
+  csvRecorder.setFloat(row,5,flowZone[3]);
+
+}
+
+string nebulaEye::getDate(){
+  stringstream ss;
+  ss << setfill('0') << setw(2) << ofGetYear() << "/" << ofGetMonth() << "/" << ofGetDay();
+  return ss.str();
+}
+
+string nebulaEye::getHour(){
+  stringstream ss;
+  ss << setfill('0') << setw(2) << ofGetHours() << ":" << ofGetMinutes() << ":" << ofGetSeconds();
+  return ss.str();
 }

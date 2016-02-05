@@ -4,6 +4,7 @@
 #include "ofxGui.h"
 #include "ofxCv.h"
 #include "ofxOsc.h"
+#include "ofxCsv.h"
 
 #include "nebulaVideoSrc.h"
 #include "nebulaFlow.h"
@@ -35,9 +36,14 @@ class nebulaEye : public ofBaseApp
 
     void sendOSC();
 
-    ofxPanel gui;
+    void recordCSVData();
+    void setupCSVrecorder();
+    void csvRecordCb(bool & flag);
+    string getDate(), getHour();
+
+    ofxPanel gui, recordPanel;
     ofParameterGroup displayGuiGrp;
-    ofParameter<bool> showGui, showVideo, showBgSub, showContour, showFlow, showZone;
+    ofParameter<bool> showGui, showVideo, showBgSub, showContour, showFlow, showZone, record;
     ofParameter<int> bgSubIntensity, showDebug;
 
     nebulaVideoSrc video;
@@ -48,8 +54,10 @@ class nebulaEye : public ofBaseApp
 
     ofPixels img;
     ofxOscSender sender;
+    wng::ofxCsv csvRecorder;
 
     vector<cv::Mat> zoneMask;
 
+    vector<float> flowZone;
 
 };

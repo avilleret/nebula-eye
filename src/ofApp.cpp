@@ -213,6 +213,7 @@ void nebulaEye::sendOSC(){
     centroid -= zone.center;
     ofVec2f centroidPol = nebula::Utils::carToPol(centroid);
     centroidPol.y -= zone.angleOrigin;
+    centroidPol.y = ofWrapDegrees(centroidPol.y);
     m.addFloatArg(centroidPol.x);
     m.addFloatArg(centroidPol.y);
     m.addFloatArg(contour.finder.getContourArea(i));

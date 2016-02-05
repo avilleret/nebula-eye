@@ -9,11 +9,11 @@ find_package( OpenCV REQUIRED )
 ofxaddon(ofxGui)
 ofxaddon(ofxOsc)
 ofxaddon(ofxCv)
-# this addons are needed if NAT transversal is enabled in ofGstRTPConstants.h
 ofxaddon(ofxGStreamer)
 ofxaddon(ofxGstRTP)
 ofxaddon(ofxDepthStreamCompression)
 ofxaddon(ofxSnappy)
+ofxaddon(ofxCsv)
 
 include_directories (
  ${CMAKE_CURRENT_LIST_DIR}/ofxCv/libs/ofxCv/include/

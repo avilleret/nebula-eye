@@ -26,6 +26,11 @@ public:
     void draw(int x, int y){draw(x,y,0,0);};
 
     void showLabelsCb(bool& flag);
+    void minAreaCb(int& val);
+    void maxAreaCb(int& val);
+    void thresholdCb(int& val);
+    void persistenceCb(int& val);
+    void maxDistanceCb(int& val);
 
     vector<ofPoint> getCentroids();
 

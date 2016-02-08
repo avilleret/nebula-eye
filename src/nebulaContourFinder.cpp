@@ -8,15 +8,20 @@ void nebulaContourFinder::setup(){
   // setup contour finder parameter GUI
   guiGrp.setName("Blob tracker");
   guiGrp.add(enabled.set("enable",true));
-  guiGrp.add(minAreaRad.set("minimum area radius",1,0,1000));
-  guiGrp.add(maxAreaRad.set("maximum area radius",100,0,1000));
-  guiGrp.add(threshold.set("threshold",15,0,100));
+  guiGrp.add(minAreaRad.set("minimum area radius",1,0,240));
+  guiGrp.add(maxAreaRad.set("maximum area radius",100,0,240));
+  guiGrp.add(threshold.set("threshold",15,0,255));
   guiGrp.add(erodeAmount.set("erode",1,0,10));
   guiGrp.add(blurAmount.set("blur",10,0,100));
   guiGrp.add(persistence.set("persistence", 15,0,200));
   guiGrp.add(maxDistance.set("max distance",32,0,200));
   guiGrp.add(showLabels.set("show label",true));
 
+  minAreaRad.addListener(this, &nebulaContourFinder::minAreaCb);
+  maxAreaRad.addListener(this, &nebulaContourFinder::maxAreaCb);
+  threshold.addListener(this, &nebulaContourFinder::thresholdCb);
+  persistence.addListener(this, &nebulaContourFinder::persistenceCb);
+  maxDistance.addListener(this, &nebulaContourFinder::maxDistanceCb);
   showLabels.addListener(this, &nebulaContourFinder::showLabelsCb);
 
   finder.setMinAreaRadius(minAreaRad);
@@ -108,6 +113,26 @@ void nebulaContourFinder::showLabelsCb(bool& flag){
     ofClear(0,0,0,0); // clear sceen before drawing
     fbo.end();
   }
+}
+
+void nebulaContourFinder::minAreaCb(int& val){
+  finder.setMinAreaRadius(val);
+}
+
+void nebulaContourFinder::maxAreaCb(int& val){
+  finder.setMaxAreaRadius(val);
+}
+
+void nebulaContourFinder::thresholdCb(int& val){
+  finder.setThreshold(val);
+}
+
+void nebulaContourFinder::persistenceCb(int& val){
+  finder.getTracker().setPersistence(val);
+}
+
+void nebulaContourFinder::maxDistanceCb(int& val){
+  finder.getTracker().setMaximumDistance(val);
 }
 
 vector<ofPoint> nebulaContourFinder::getCentroids(){

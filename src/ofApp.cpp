@@ -47,37 +47,10 @@ void nebulaEye::update()
   video.update();
   if(video.isFrameNew()){
     img = video.getPixels();
+    zone.setSize(cv::Size(img.getWidth(),img.getHeight()));
     bgSub.update(img);
     flow.update(img);
     contour.update(bgSub.m_fgmask);
-
-    // create zone mask
-    // TODO redraw only on zone change
-    zoneMask.resize(3);
-
-    ofVec2f scaledCenter = zone.center.get();
-
-    scaledCenter.x = float(scaledCenter.x) * float(flow.m_flow.cols)/ofGetWidth();
-    scaledCenter.y = float(scaledCenter.y) * float(flow.m_flow.rows)/ofGetHeight();
-    cv::Point center = ofxCv::toCv(scaledCenter);
-    for ( int i = 0; i < zoneMask.size() ; i++ ){
-      // clear everything
-      zoneMask[i] = cv::Mat::zeros(flow.m_flow.rows, flow.m_flow.cols , CV_8UC1);
-      // first draw a white filled circle
-      int rad = zone.radius.get()[i] * zoneMask[i].cols / ofGetWidth();
-      cv::circle(zoneMask[i], center, rad, cv::Scalar(255,255,255),-1);
-    }
-
-    int rad = zone.radius.get()[0] * zoneMask[0].cols / ofGetWidth();
-    // then add a black one into the white to mask the other zone(s)
-    cv::circle(zoneMask[1], center, rad, cv::Scalar(0),-1);
-    rad = zone.radius.get()[1] * zoneMask[0].cols / ofGetWidth();
-    cv::circle(zoneMask[2], center, rad, 0,-1);
-
-    // for the last zone, get a white image and draw a black circle
-    zoneMask.push_back( cv::Mat::ones(flow.m_flow.rows, flow.m_flow.cols , CV_8UC1)*255 );
-    rad = zone.radius.get()[2] * zoneMask[2].cols / ofGetWidth();
-    cv::circle(zoneMask[zoneMask.size()-1], center, rad, 0, -1);
 
     sendOSC();
     recordCSVData();
@@ -124,10 +97,10 @@ void nebulaEye::draw()
   if (showDebug){
     ofSetColor(255);
     int i = showDebug.get()-1;
-    ofRectangle rect = ofRectangle(zoneMask[i].cols/2,zoneMask[i].rows/2, zoneMask[i].cols, zoneMask[i].rows);
-    ofxCv::drawMat(zoneMask[i],rect.x, rect.y);
+    ofRectangle rect = ofRectangle(zone.mask[i].cols/2,zone.mask[i].rows/2, zone.mask[i].cols, zone.mask[i].rows);
+    ofxCv::drawMat(zone.mask[i],rect.x, rect.y);
     cv::Mat m_flow;
-    double zoneFlow = flow.getFlowInMask(zoneMask[i], &m_flow);
+    double zoneFlow = flow.getFlowInMask(zone.mask[i], &m_flow);
     ofVec2f offset(rect.x,rect.y);
     ofVec2f scale(rect.width/m_flow.cols, rect.height/m_flow.rows);
     int stepSize = 4;
@@ -224,8 +197,8 @@ void nebulaEye::sendOSC(){
   ofxOscMessage m;
   m.setAddress("/f");
   flowZone.clear();
-  for ( int i = 0; i < zoneMask.size() ; i++ ){
-      double f = flow.getFlowInMask(zoneMask[i], NULL);
+  for ( int i = 0; i < zone.mask.size() ; i++ ){
+      double f = flow.getFlowInMask(zone.mask[i], NULL);
       flowZone.push_back(f);
       m.addFloatArg(f);
   }

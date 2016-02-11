@@ -10,6 +10,7 @@
 
 #include "ofMain.h"
 #include "nebulaUtils.h"
+#include "ofxCv.h"
 
 namespace nebula {
 
@@ -44,13 +45,17 @@ namespace nebula {
 
     //this function checks in which zone the passed arguments are.
     int inside(ofVec2f pt);
+    void setSize(cv::Size);
     ofParameterGroup guiGrp;
     ofParameter<ofVec2f> center;
     ofParameter<ofVec3f> radius;
     ofParameter<float> angleOrigin;
     int zcatch; // zone dragged, -1 if mouse is released
+    vector<cv::Mat> mask; // one mask for each zone
 
   protected:
       bool bRegisteredEvents;
+      void createMask();
+      cv::Size size; // expected size of the incomming image
   };
 }

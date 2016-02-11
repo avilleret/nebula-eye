@@ -56,8 +56,5 @@ class nebulaEye : public ofBaseApp
     ofxOscSender sender;
     wng::ofxCsv csvRecorder;
 
-    vector<cv::Mat> zoneMask;
-
     vector<float> flowZone;
-
 };

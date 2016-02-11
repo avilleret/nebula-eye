@@ -77,6 +77,7 @@ void nebula::Zone::mouseDragged(ofMouseEventArgs & args){
     default:
       break;
   }
+  createMask();
 }
 void nebula::Zone::mousePressed(ofMouseEventArgs & args){
   zcatch = inside(args);
@@ -104,4 +105,39 @@ void nebula::Zone::attach(bool & flag){
     ofUnregisterMouseEvents(this); // this will enable our circle class to listen to the mouse events.
     bRegisteredEvents = false;
   }
+}
+
+void nebula::Zone::createMask(){
+
+  mask.clear();
+  // create zone mask
+  ofVec2f pt = center.get();
+
+  pt.x = float(pt.x) * float(size.width)/ofGetWidth();
+  pt.y = float(pt.y) * float(size.height)/ofGetHeight();
+  cv::Point scaledCenter = ofxCv::toCv(pt);
+  for ( int i = 0; i < 3 ; i++ ){
+    // clear black image
+    mask.push_back(cv::Mat::zeros(size.height, size.width , CV_8UC1));
+    // first draw a white filled circle
+    int rad = radius.get()[i] * mask[i].cols / ofGetWidth();
+    cv::circle(mask[i], scaledCenter, rad, cv::Scalar(255,255,255),-1);
+  }
+
+  int rad = radius.get()[0] * mask[0].cols / ofGetWidth();
+  // then add a black one into the white to mask the other zone(s)
+  cv::circle(mask[1], scaledCenter, rad, cv::Scalar(0),-1);
+  rad = radius.get()[1] * mask[0].cols / ofGetWidth();
+  cv::circle(mask[2], scaledCenter, rad, 0,-1);
+
+  // for the last zone, create a white image and draw a black circle
+  mask.push_back( cv::Mat::ones(size.height, size.width, CV_8UC1)*255 );
+  rad = radius.get()[2] * mask[2].cols / ofGetWidth();
+  cv::circle(mask[mask.size()-1], scaledCenter, rad, 0, -1);
+}
+
+void nebula::Zone::setSize(cv::Size s){
+  bool changed = s != size;
+  size = s;
+  if (changed) createMask();
 }

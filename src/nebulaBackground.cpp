@@ -108,6 +108,7 @@ void nebulaBackground::update(cv::Mat& input){
     }
   } else if (!m_fgbg.empty()){
     try {
+      double time = ofClamp(learningTime/100000.,0.,1.);
       (*m_fgbg)(input, m_fgmask, learningTime);
     } catch (cv::Exception e) {
       ofLogError("nebulaBackground") << "OpenCV error : " << e.code << " " << e.err << " : " << e.what();
@@ -221,13 +222,13 @@ void nebulaBackground::initBgsubGui(){
     learningTime.addListener(this, &nebulaBackground::learningTimeChanged);
     // pass
   } else if ( m_algoName.substr(21) == "MOG" ){
-    learningTime.setMax(1);
-    learningTime.setMin(0);
-    learningTime = 0.;
+    learningTime.setMax(1.);
+    learningTime.setMin(0.);
+    learningTime = 0.001;
   } else if ( m_algoName.substr(21) == "MOG2" ) {
-    learningTime.setMax(10);
-    learningTime.setMin(0);
-    learningTime = 1.;
+    learningTime.setMax(1.);
+    learningTime.setMin(0.);
+    learningTime = 0.1;
   } else if ( m_algoName.substr(21) == "GMG" && !gpuMode) {
     learningTime.setMax(1);
     learningTime.setMin(0);

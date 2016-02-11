@@ -15,7 +15,7 @@ public:
     void initAlgo();
 
     void setup();
-    void update(ofPixels &img);
+    void update(cv::Mat &img);
     void draw(int x, int y, int w, int h);
     void draw(int x, int y){draw(x,y,0,0);};
     void initBgsubGui();

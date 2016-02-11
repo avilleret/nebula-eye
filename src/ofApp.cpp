@@ -48,7 +48,10 @@ void nebulaEye::update()
   if(video.isFrameNew()){
     img = video.getPixels();
     zone.setSize(cv::Size(img.getWidth(),img.getHeight()));
-    bgSub.update(img);
+    cv::Mat cvimg = ofxCv::toCv(img);
+    cv::Mat maskedImg;
+    cvimg.copyTo(maskedImg,~zone.mask[0]);
+    bgSub.update(maskedImg);
     flow.update(img);
     contour.update(bgSub.m_fgmask);
 

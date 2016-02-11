@@ -77,14 +77,16 @@ void nebulaBackground::setup(){
   }
 }
 
-void nebulaBackground::update(ofPixels &img){
+void nebulaBackground::update(cv::Mat& input){
   if(!enabled) return;
+
+  ofImage img;
+  ofxCv::toOf(input,img);
 
   if ( !thresholded.isAllocated() || img.getWidth() != thresholded.getWidth() || img.getHeight() != thresholded.getHeight() ){
     thresholded.allocate(img.getWidth(), img.getHeight(), OF_IMAGE_COLOR_ALPHA);
   }
 
-  cv::Mat input = ofxCv::toCv(img);
   if ( gpuMode && !forceCPU ) {
     try  {
       d_input = input;

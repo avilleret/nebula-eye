@@ -1,9 +1,10 @@
 //  inspired by :
 //  circle.cpp
 //  simpleEventsExample
+//  Roy Macdonald on 12/25/12.
 //
-//  Created by Roy Macdonald on 12/25/12.
-//  Copyright (c) 2012 micasa. All rights reserved.
+// Created by Antoine Villeret in 2016 for Nebula installation
+// Copyright (c) 2016 Antoine Villeret. All rights reserved.
 //
 
 #include "nebulaZone.h"

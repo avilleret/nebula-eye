@@ -47,7 +47,7 @@ void nebulaEye::update()
   video.update();
   if(video.isFrameNew()){
     img = video.getPixels();
-    zone.setSize(cv::Size(img.getWidth(),img.getHeight()));
+    zone.update(img);
     cv::Mat cvimg = ofxCv::toCv(img);
     cv::Mat maskedImg;
     cvimg.copyTo(maskedImg,~zone.mask[0]);
@@ -66,7 +66,7 @@ void nebulaEye::update()
 
 void nebulaEye::draw()
 {
-  int w(ofGetWidth()), h(ofGetHeight());
+  int w=ofGetWidth(), h=ofGetHeight();
   if ( ( ofGetHeight() > 0 && img.getHeight() > 0 ) ) {
     if ( ofGetWidth()/ofGetHeight() > img.getWidth()/img.getHeight()){
       h = ofGetHeight();

@@ -125,7 +125,7 @@ void nebula::Zone::createMask(){
   }
 
   int rad = radius.get()[0] * mask[0].cols / ofGetWidth();
-  // then add a black one into the white to mask the other zone(s)
+  // then add a black hole into the white circle to mask the other zone(s)
   cv::circle(mask[1], scaledCenter, rad, cv::Scalar(0),-1);
   rad = radius.get()[1] * mask[0].cols / ofGetWidth();
   cv::circle(mask[2], scaledCenter, rad, 0,-1);
@@ -136,8 +136,10 @@ void nebula::Zone::createMask(){
   cv::circle(mask[mask.size()-1], scaledCenter, rad, 0, -1);
 }
 
-void nebula::Zone::setSize(cv::Size s){
-  bool changed = s != size;
-  size = s;
-  if (changed) createMask();
+void nebula::Zone::update(ofPixels & img){
+  cv::Size s = cv::Size(img.getWidth(),img.getHeight());
+  if ( s != size ) {
+    size = s;
+    createMask();
+  }
 }

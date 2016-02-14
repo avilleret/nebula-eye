@@ -29,6 +29,7 @@ namespace nebula {
     static ofEvent<ofVec2f> clickedInsideGlobal;
 
     void setup();
+    void update(ofPixels & px);
     void draw();
     void clear();
     void attach(bool & flag);
@@ -45,7 +46,6 @@ namespace nebula {
 
     //this function checks in which zone the passed arguments are.
     int inside(ofVec2f pt);
-    void setSize(cv::Size);
     ofParameterGroup guiGrp;
     ofParameter<ofVec2f> center;
     ofParameter<ofVec3f> radius;

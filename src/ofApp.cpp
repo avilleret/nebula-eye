@@ -53,7 +53,11 @@ void nebulaEye::update()
     cvimg.copyTo(maskedImg,~zone.mask[0]);
     bgSub.update(maskedImg);
     flow.update(img);
-    contour.update(bgSub.m_fgmask);
+    if ( bgSub.enabled ){
+      contour.update(bgSub.m_fgmask);
+    } else {
+      contour.update(ofxCv::toCv(img));
+    }
 
     sendOSC();
     recordCSVData();

@@ -65,7 +65,7 @@ void nebula::Zone::mouseDragged(ofMouseEventArgs & args){
         float dist = std::max(args.distance(center),float(10.));
         radius.set(ofVec3f(dist,radius->y, radius->z));
         ofVec2f vect = args - center;
-        angleOrigin.set(-vect.angle(ofVec2f(1,0)));
+        angleOrigin.set(ofVec2f(1,0).angle(vect));
       }
       break;
     case 1:

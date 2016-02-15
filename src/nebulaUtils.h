@@ -8,7 +8,7 @@ namespace nebula {
        return ofVec2f(pol.x * cos(pol.y), pol.x * sin(pol.y));
      }
      static ofVec2f carToPol(ofVec2f car){
-       return ofVec2f(car.length(), car.angle(ofVec2f(1,0)));
+       return ofVec2f(car.length(), ofVec2f(1,0).angle(car));
      }
 
      static ofVec2f carToPol(float x, float y){

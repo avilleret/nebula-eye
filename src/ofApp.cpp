@@ -18,6 +18,7 @@ void nebulaEye::setup()
   displayGuiGrp.add(showFlow.set("show motion flow",true));
   displayGuiGrp.add(showZone.set("show zone",true));
   displayGuiGrp.add(showDebug.set("show flow mask",0,0,4));
+  displayGuiGrp.add(mouseTest.set("mouse blob simulation",false));
 
   gui.setup("nebula-eye","settings.xml",660,10);
   gui.add(displayGuiGrp);
@@ -34,6 +35,7 @@ void nebulaEye::setup()
   showGui.addListener(&bgSub, &nebulaBackground::showGui);
   showZone.addListener(&zone, &nebula::Zone::attach);
   record.addListener(this, &nebulaEye::csvRecordCb);
+  mouseTest.addListener(this, &nebulaEye::clearTestImg);
 
   gui.loadFromFile("settings.xml");
 
@@ -45,8 +47,14 @@ void nebulaEye::setup()
 void nebulaEye::update()
 {
   video.update();
-  if(video.isFrameNew()){
-    img = video.getPixels();
+  if(video.isFrameNew() || mouseTest){
+    if ( mouseTest ){
+      ofxCv::toOf(testimg,img);
+      zone.unregister();
+    } else {
+      img = video.getPixels();
+      zone._register();
+    }
     zone.update(img);
     cv::Mat cvimg = ofxCv::toCv(img);
     cv::Mat maskedImg;
@@ -77,10 +85,14 @@ void nebulaEye::draw()
     }
   }
     
-  // ofLogVerbose("ofApp") << "drawing resolution  : " << w << " x " << h;
   ofSetColor(255,255,255);
-  if(showVideo)
-    video.draw(0,0,w,h);
+  if(showVideo){
+    if (mouseTest){
+      ofxCv::drawMat(testimg,0,0);
+    } else {
+      video.draw(0,0,w,h);
+    }
+  }
   if(showBgSub){
     ofSetColor(255,255,255,bgSubIntensity);
     bgSub.draw(0,0,w,h);
@@ -143,6 +155,8 @@ void nebulaEye::mouseMoved(ofMouseEventArgs& mouse)
 
 void nebulaEye::mouseDragged(ofMouseEventArgs& mouse)
 {
+  testimg = cv::Mat::zeros(ofGetHeight(), ofGetWidth(), CV_8UC1);
+  cv::circle(testimg, cv::Point(mouse.x,mouse.y), 20, 255,-1);
 }
 
 void nebulaEye::mousePressed(ofMouseEventArgs& mouse)
@@ -295,4 +309,9 @@ string nebulaEye::getHour(){
   stringstream ss;
   ss << setfill('0') << setw(2) << ofGetHours() << ":" << ofGetMinutes() << ":" << ofGetSeconds() << "." << setw(3) << int(fmod(float(ofGetElapsedTimeMillis()),1000.));
   return ss.str();
+}
+
+void nebulaEye::clearTestImg(bool & flag){
+  if ( flag )
+   testimg = cv::Mat::zeros(ofGetHeight(), ofGetWidth(), CV_8UC1);
 }

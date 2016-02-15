@@ -40,10 +40,11 @@ class nebulaEye : public ofBaseApp
     void setupCSVrecorder();
     void csvRecordCb(bool & flag);
     string getDate(), getHour();
+    void clearTestImg(bool & flag);
 
     ofxPanel gui, recordPanel;
     ofParameterGroup displayGuiGrp;
-    ofParameter<bool> showGui, showVideo, showBgSub, showContour, showFlow, showZone, record;
+    ofParameter<bool> showGui, showVideo, showBgSub, showContour, showFlow, showZone, record, mouseTest;
     ofParameter<int> bgSubIntensity, showDebug;
 
     nebulaVideoSrc video;
@@ -53,6 +54,7 @@ class nebulaEye : public ofBaseApp
     nebula::Zone zone;
 
     ofPixels img;
+    cv::Mat testimg;
     ofxOscSender sender;
     wng::ofxCsv csvRecorder;
 

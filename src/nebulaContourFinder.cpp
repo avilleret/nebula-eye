@@ -13,7 +13,9 @@ void nebulaContourFinder::setup(){
   guiGrp.add(threshold.set("threshold",15,0,255));
   guiGrp.add(erodeAmount.set("erode",1,0,10));
   guiGrp.add(blurAmount.set("blur",10,0,100));
+  // time to wait before forgetting something
   guiGrp.add(persistence.set("persistence", 15,0,200));
+  // this is the maximum distance a pixel can move between 2 frames
   guiGrp.add(maxDistance.set("max distance",32,0,200));
   guiGrp.add(showLabels.set("show label",true));
 
@@ -27,9 +29,7 @@ void nebulaContourFinder::setup(){
   finder.setMinAreaRadius(minAreaRad);
   finder.setMaxAreaRadius(maxAreaRad);
   finder.setThreshold(threshold);
-  // wait for half a frame before forgetting something
   finder.getTracker().setPersistence(persistence);
-  // an object can move up to 32 pixels per frame
   finder.getTracker().setMaximumDistance(maxDistance);
 }
 

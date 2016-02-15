@@ -273,18 +273,21 @@ void nebulaBackground::initBgsubGui(){
                                           defaultValue!=0 ? defaultValue/4 : 0,
                                           defaultValue!=0 ? defaultValue*4 : 100));
       // set min and max to avoid crash
-        if (m_algoName.substr(21) == "MOG"){
+      if (m_algoName.substr(21) == "MOG" ){
         if ( bgsubParameters[i].getName() == "nmixtures") {
           bgsubParameters[i].setMax(11);
           bgsubParameters[i].setMin(0);
         } if ( bgsubParameters[i].getName() == "backgroundRatio") {
           bgsubParameters[i].setMax(1);
           bgsubParameters[i].setMin(0);
-        } else if ( bgsubParameters[i].getName() == "learningTime") {
-            bgsubParameters[i].setMax(1);
-            bgsubParameters[i].setMin(0);
         }
       }
+
+      if ( "initializationFrames" == bgsubParameters[i].getName() ){
+        bgsubParameters[i].setMax(1000);
+        bgsubParameters[i] = 100;
+      }
+
       bgsubParameters[i].addListener(this, &nebulaBackground::parameterChanged);
     }
   } else {

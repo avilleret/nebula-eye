@@ -87,13 +87,15 @@ void nebulaBackground::update(cv::Mat& input){
     thresholded.allocate(img.getWidth(), img.getHeight(), OF_IMAGE_COLOR_ALPHA);
   }
 
+  double time = ofClamp(learningTime*learningTime/10.,0.,1.);
+
   if ( gpuMode && !forceCPU ) {
     try  {
       d_input = input;
       if ( m_algoName.substr(21) == "MOG" ){
-        m_oclMOG( d_input, d_fgmask, learningTime );
+        m_oclMOG( d_input, d_fgmask, time );
       } else if ( m_algoName.substr(21) == "MOG2" ){
-        m_oclMOG2( d_input, d_fgmask, learningTime );
+        m_oclMOG2( d_input, d_fgmask, time );
       } else {
         ofLogError("nebulaBackground") << "there is no GPU version of algo " << m_algoName;
         gpuMode = false;
@@ -108,8 +110,7 @@ void nebulaBackground::update(cv::Mat& input){
     }
   } else if (!m_fgbg.empty()){
     try {
-      double time = ofClamp(learningTime/100000.,0.,1.);
-      (*m_fgbg)(input, m_fgmask, learningTime);
+      (*m_fgbg)(input, m_fgmask, time);
     } catch (cv::Exception e) {
       ofLogError("nebulaBackground") << "OpenCV error : " << e.code << " " << e.err << " : " << e.what();
       return;
@@ -229,11 +230,10 @@ void nebulaBackground::initBgsubGui(){
     learningTime.setMax(1.);
     learningTime.setMin(0.);
     learningTime = 0.1;
-  } else if ( m_algoName.substr(21) == "GMG" && !gpuMode) {
-    learningTime.setMax(1);
-    learningTime.setMin(0);
-    learningTime = 0.7;
-    bgsubGui.add(learningTime.set("Learning rate", 0.7, 0, 1));
+  } else if ( m_algoName.substr(21) == "GMG") {
+    learningTime.setMax(1.);
+    learningTime.setMin(0.);
+    learningTime = 0.1;
   }
 
   if (!m_fgbg.empty()){

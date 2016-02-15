@@ -1,4 +1,4 @@
-#N canvas 639 245 488 422 10;
+#N canvas 636 259 488 422 10;
 #X obj 108 95 mrpeach/udpreceive 123456;
 #X obj 135 144 mrpeach/unpackOSC;
 #X obj 70 227 print;
@@ -25,10 +25,10 @@
 #X floatatom 208 365 5 0 0 0 - - -, f 5;
 #X floatatom 244 366 5 0 0 0 - - -, f 5;
 #X text 95 384 id;
-#X text 135 387 x;
-#X text 173 385 y;
 #X text 211 383 size;
 #X text 246 384 zone;
+#X text 131 385 rho;
+#X text 172 384 théta;
 #X connect 0 0 17 0;
 #X connect 1 0 3 0;
 #X connect 1 0 9 0;

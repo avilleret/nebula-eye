@@ -34,6 +34,9 @@ namespace nebula {
     void clear();
     void attach(bool & flag);
 
+    void _register();
+    void unregister();
+
     //We need to declare all this mouse events methods to be able to listen to mouse events.
     //All this must be declared even if we are just going to use only one of this methods.
     void mouseMoved(ofMouseEventArgs & args);

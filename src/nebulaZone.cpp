@@ -18,15 +18,12 @@ nebula::Zone::Zone() {
 }
 
 nebula::Zone::~Zone() {
-    clear();
+    unregister();
 }
 
 void nebula::Zone::setup(){
 
-    if(!bRegisteredEvents) {
-        ofRegisterMouseEvents(this); // this will enable our circle class to listen to the mouse events.
-        bRegisteredEvents = true;
-    }
+    _register();
     guiGrp.setName("Zones settings");
 
     guiGrp.add(radius.set("zone radius", ofVec3f(20, 120, 400), ofVec3f(20,20,20), ofVec3f(ofGetWidth()/2)));
@@ -48,11 +45,18 @@ void nebula::Zone::draw(){
     ofPopStyle();
 }
 
-void nebula::Zone::clear() {
-    if(bRegisteredEvents) {
-        ofUnregisterMouseEvents(this); // disable litening to mous events.
-        bRegisteredEvents = false;
-    }
+void nebula::Zone::unregister(){
+  if(bRegisteredEvents) {
+      ofUnregisterMouseEvents(this); // disable litening to mous events.
+      bRegisteredEvents = false;
+  }
+}
+
+void nebula::Zone::_register(){
+  if(!bRegisteredEvents) {
+      ofRegisterMouseEvents(this); // this will enable our circle class to listen to the mouse events.
+      bRegisteredEvents = true;
+  }
 }
 
 void nebula::Zone::mouseMoved(ofMouseEventArgs & args){}

@@ -3,6 +3,7 @@
 void nebulaEye::setup()
 {
   sender.setup(OSC_IP, OSC_PORT);
+  receiver.setup(OSC_LISTENING_PORT);
   video.setup();
   flow.setup();
   bgSub.setup();
@@ -46,6 +47,7 @@ void nebulaEye::setup()
 
 void nebulaEye::update()
 {
+  updateOSC();
   video.update();
   if(video.isFrameNew() || mouseTest){
     if ( mouseTest ){
@@ -325,4 +327,22 @@ string nebulaEye::getHour(){
 void nebulaEye::clearTestImg(bool & flag){
   if ( flag )
    testimg = cv::Mat::zeros(ofGetHeight(), ofGetWidth(), CV_8UC1);
+}
+
+void nebulaEye::updateOSC(){
+  // check for waiting messages
+  while(receiver.hasWaitingMessages()){
+    // get the next message
+    ofxOscMessage m;
+    receiver.getNextMessage(m);
+    string add = m.getAddress();
+    string temp = "/background/MOG2/";
+    if (add.substr(0,temp.size()) == temp){
+      string paramName = add.substr(temp.size());
+      bgSub.setParameterFloat(paramName, m.getArgAsFloat(0));
+      ofLogVerbose("nebulaEye") << "receive parameter : " << paramName << " : " << m.getArgAsFloat(0);
+    } else if ( add == "/record" ) {
+      record = m.getArgAsBool(0);
+    }
+  }
 }

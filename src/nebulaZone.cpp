@@ -94,7 +94,6 @@ void nebula::Zone::mousePressed(ofMouseEventArgs & args){
   ptNorm.x = args.x / ofGetWidth();
   ptNorm.y = args.y / ofGetWidth();
   zcatch = inside(ptNorm);
-  ofLogVerbose("nebula::Zone") << "catch : " << zcatch;
 }
 void nebula::Zone::mouseReleased(ofMouseEventArgs & args){
   zcatch = -1;

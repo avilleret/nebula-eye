@@ -14,6 +14,7 @@
 
 #define OSC_IP "localhost"
 #define OSC_PORT 123456
+#define OSC_LISTENING_PORT 12321
 
 class nebulaEye : public ofBaseApp
 {
@@ -35,6 +36,7 @@ class nebulaEye : public ofBaseApp
     void thresholdChanged(int & tresh);
 
     void sendOSC();
+    void updateOSC();
 
     void recordCSVData();
     void setupCSVrecorder();
@@ -56,6 +58,7 @@ class nebulaEye : public ofBaseApp
     ofPixels img;
     cv::Mat testimg;
     ofxOscSender sender;
+    ofxOscReceiver receiver;
     wng::ofxCsv csvRecorder;
 
     vector<float> flowZone;

@@ -22,6 +22,7 @@ public:
     void saveAlgoParam(); // save specific algo parameters
     void parameterChanged(float& v);
     void showGui(bool & flag);
+    void setParameterFloat(string paramName, float value);
 
 //protected:
     ofxCv::RunningBackground background;

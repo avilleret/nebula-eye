@@ -216,7 +216,7 @@ void nebulaBackground::initBgsubGui(){
   bgsubGui.setName(m_algoName);
   vector<string> paramList;
   bgsubParameters.clear();
-  bgsubGui.add(learningTime.set("Learning time", 10, 0, 100));
+  bgsubGui.add(learningTime.set("learningTime", 10, 0, 100));
   learningTime.removeListener(this, &nebulaBackground::learningTimeChanged);
 
   if( m_algoName == "Common" ){
@@ -291,9 +291,9 @@ void nebulaBackground::initBgsubGui(){
       bgsubParameters[i].addListener(this, &nebulaBackground::parameterChanged);
     }
   } else {
-    ofLogVerbose("nebulaBackground") << 0 << " Learning time";
+    ofLogVerbose("nebulaBackground") << 0 << " LearningTime";
     ofLogVerbose("nebulaBackground") << 1 << " Treshold";
-    paramList.push_back("Learning time"); // TODO move those pararmeters from global panel to algo one
+    paramList.push_back("LearningTime"); // TODO move those pararmeters from global panel to algo one
     paramList.push_back("Threshold");
   }
 
@@ -355,6 +355,19 @@ void nebulaBackground::parameterChanged(float& v){
   }
   ofLogVerbose("nebulaBackground") << "--- parameter update done";
 
+}
+
+void nebulaBackground::setParameterFloat(string paramName, float value){
+
+  if ( paramName == "learningTime")
+    learningTime = value;
+  else {
+    for (size_t i=0; i < bgsubParameters.size(); i++){
+      if (paramName == bgsubParameters[i].getName()){
+        bgsubParameters[i] = value;
+      }
+    }
+  }
 }
 
 void nebulaBackground::showGui(bool & flag){

@@ -4,6 +4,7 @@
 #include "ofxGui.h"
 #include "ofxCv.h"
 #include "ofxOsc.h"
+#include "ofxOscParameterSync.h"
 #include "ofxCsv.h"
 
 #include "nebulaVideoSrc.h"
@@ -48,6 +49,7 @@ class nebulaEye : public ofBaseApp
     ofParameterGroup displayGuiGrp;
     ofParameter<bool> showGui, showVideo, showBgSub, showContour, showFlow, showZone, record, mouseTest;
     ofParameter<int> bgSubIntensity, showDebug;
+    ofxOscParameterSync parameterSync;
 
     nebulaVideoSrc video;
     nebulaFlow flow;

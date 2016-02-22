@@ -29,6 +29,9 @@ void nebulaEye::setup()
   gui.add(contour.guiGrp);
   gui.add(zone.guiGrp);
 
+  parameterSync.setup((ofParameterGroup&)gui.getParameter(),6667,"localhost",6666);
+
+
   recordPanel.setup("record", "recordSetting.xml",10, ofGetHeight()-50);
   recordPanel.add(record.set("recording",false));
 
@@ -47,6 +50,7 @@ void nebulaEye::setup()
 
 void nebulaEye::update()
 {
+  parameterSync.update();
   updateOSC();
   video.update();
   if(video.isFrameNew() || mouseTest){

@@ -1,4 +1,4 @@
-/*********************************/
+ /*********************************/
 /* Motion flow computation class */
 /*********************************/
 #include "nebulaFlow.h"
@@ -12,7 +12,7 @@ void nebulaFlow::setup(){
   guiGrp.add(fbPyrScale.set("fbPyrScale", .5, 0, .99));
   guiGrp.add(fbLevels.set("fbLevels", 4, 1, 8));
   guiGrp.add(fbIterations.set("fbIterations", 2, 1, 8));
-  guiGrp.add(fbPolyN.set("fbPolyN", 7, 5, 10));
+  guiGrp.add(fbPolyN.set("fbPolyN", 7, 5, 7));
   guiGrp.add(fbPolySigma.set("fbPolySigma", 1.5, 1.1, 2));
   guiGrp.add(fbUseGaussian.set("fbUseGaussian", false));
   guiGrp.add(fbWinSize.set("winSize", 32, 4, 64));
@@ -39,7 +39,9 @@ void nebulaFlow::setup(){
 
 void nebulaFlow::update(ofPixels &img){
   if(!enabled) return;
-
+  
+  if ( fbPolyN != 5 || fbPolyN != 7 ) fbPolyN = 5;
+  
   if ( gpuMode ){
     oclFbFlow.pyrScale=fbPyrScale;
     oclFbFlow.numLevels=fbLevels;

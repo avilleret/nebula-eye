@@ -40,7 +40,7 @@ void nebulaFlow::setup(){
 void nebulaFlow::update(ofPixels &img){
   if(!enabled) return;
   
-  if ( fbPolyN != 5 || fbPolyN != 7 ) fbPolyN = 5;
+  if ( fbPolyN != 5 && fbPolyN != 7 ) fbPolyN = 5;
   
   if ( gpuMode ){
     oclFbFlow.pyrScale=fbPyrScale;

@@ -17,7 +17,7 @@ void nebulaEye::setup()
   displayGuiGrp.add(showContour.set("show contour",true));
   displayGuiGrp.add(showFlow.set("show motion flow",true));
   displayGuiGrp.add(showZone.set("show zone",true));
-  displayGuiGrp.add(showDebug.set("show flow mask",0,0,4));
+  displayGuiGrp.add(showDebug.set("debug",0,0,5));
   displayGuiGrp.add(mouseTest.set("mouse blob simulation",false));
 
   gui.setup("nebula-eye","settings.xml",660,10);
@@ -116,26 +116,31 @@ void nebulaEye::draw()
   if (showDebug){
     ofSetColor(255);
     int i = showDebug.get()-1;
-    ofRectangle rect = ofRectangle(zone.mask[i].cols/2,zone.mask[i].rows/2, zone.mask[i].cols, zone.mask[i].rows);
-    ofxCv::drawMat(zone.mask[i],rect.x, rect.y);
-    cv::Mat m_flow;
-    double zoneFlow = flow.getFlowInMask(zone.mask[i], &m_flow);
-    ofVec2f offset(rect.x,rect.y);
-    ofVec2f scale(rect.width/m_flow.cols, rect.height/m_flow.rows);
-    int stepSize = 4;
-    ofPopStyle();
-    ofSetColor(0,255,0);
-    for(int y = 0; y < m_flow.rows; y += stepSize) {
-      for(int x = 0; x < m_flow.cols; x += stepSize) {
-        ofVec2f cur = ofVec2f(x, y) * scale + offset;
-        const cv::Vec2f& vec = m_flow.at<cv::Vec2f>(y, x);
-        ofDrawLine(cur, ofVec2f(x + vec[0], y + vec[1]) * scale + offset);
+    if ( i < zone.mask.size() ){
+      ofRectangle rect = ofRectangle(zone.mask[i].cols/2,zone.mask[i].rows/2, zone.mask[i].cols, zone.mask[i].rows);
+      ofxCv::drawMat(zone.mask[i],rect.x, rect.y);
+      cv::Mat m_flow;
+      double zoneFlow = flow.getFlowInMask(zone.mask[i], &m_flow);
+      ofVec2f offset(rect.x,rect.y);
+      ofVec2f scale(rect.width/m_flow.cols, rect.height/m_flow.rows);
+      int stepSize = 4;
+      ofPopStyle();
+      ofSetColor(0,255,0);
+      for(int y = 0; y < m_flow.rows; y += stepSize) {
+        for(int x = 0; x < m_flow.cols; x += stepSize) {
+          ofVec2f cur = ofVec2f(x, y) * scale + offset;
+          const cv::Vec2f& vec = m_flow.at<cv::Vec2f>(y, x);
+          ofDrawLine(cur, ofVec2f(x + vec[0], y + vec[1]) * scale + offset);
+        }
       }
+      ofPushStyle();
+      stringstream ss;
+      ss << "zone flow : " << zoneFlow;
+      ofDrawBitmapString(ss.str(), ofPoint(rect.x+10,rect.y-10));
+    } else {
+      ofRectangle rect = ofRectangle(bgSub.m_fgmask.cols/2,bgSub.m_fgmask.rows/2, bgSub.m_fgmask.cols, bgSub.m_fgmask.rows);
+      ofxCv::drawMat(contour.blurred,rect.x, rect.y);
     }
-    ofPushStyle();
-    stringstream ss;
-    ss << "zone flow : " << zoneFlow;
-    ofDrawBitmapString(ss.str(), ofPoint(rect.x+10,rect.y-10));
   }
 
   if (showGui){

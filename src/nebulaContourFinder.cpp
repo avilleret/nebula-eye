@@ -33,8 +33,25 @@ void nebulaContourFinder::setup(){
   finder.getTracker().setMaximumDistance(maxDistance);
 }
 
+void nebulaContourFinder::update(cv::Mat img){
+  if(!enabled || img.size() == cv::Size(0,0)) return;
+
+  cv::Mat input = ofxCv::toCv(img), gray;
+  if(input.channels() == 1){
+    gray = input;
+  } else {
+    cv::cvtColor(input, gray, CV_RGB2GRAY);
+  }
+
+  if ( blurred.size() != gray.size() ) blurred.create(gray.size(), CV_8UC1);
+
+  ofxCv::erode(gray, blurred, erodeAmount);
+  ofxCv::blur(blurred, blurAmount);
+  finder.findContours(blurred);
+}
+
 void nebulaContourFinder::draw(int x, int y, int w, int h){
-    if(!enabled || blurred.size() == cv::Size(0,0)) return;
+  if(!enabled || blurred.size() == cv::Size(0,0)) return;
   ofxCv::RectTracker& tracker = finder.getTracker();
 
   ofPushMatrix();
@@ -136,12 +153,4 @@ void nebulaContourFinder::persistenceCb(int& val){
 
 void nebulaContourFinder::maxDistanceCb(int& val){
   finder.getTracker().setMaximumDistance(val);
-}
-
-vector<ofPoint> nebulaContourFinder::getCentroids(){
-  vector<ofPoint> centroids;
-  for (int i = 0; i < finder.size(); i++){
-       centroids.push_back(ofxCv::toOf(finder.getCentroid(i)));
-    }
-  return centroids;
 }

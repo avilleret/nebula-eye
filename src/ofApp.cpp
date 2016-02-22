@@ -198,7 +198,6 @@ void nebulaEye::keyPressed(int key){
 
 void nebulaEye::sendOSC(){
   ofxOscBundle bundle;
-  //vector<ofPoint> centroids = contour.getCentroids();
   for (int i = 0; i < contour.finder.size(); i++ ){
     ofxOscMessage m;    
     m.setAddress("/b");

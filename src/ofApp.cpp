@@ -285,13 +285,13 @@ void nebulaEye::recordCSVData(){
   for (int i = 0; i < contour.finder.size(); i++ ){
     if ( contour.finder.getContourArea(i) > area ){
         biggest = i;
+        area = contour.finder.getContourArea(i);
     }
   }
 
   if ( biggest != -1 ){
     ofVec2f centroid = ofxCv::toOf(contour.finder.getCentroid(biggest));
-    centroid.x *= ofGetWidth() / bgSub.m_fgmask.cols;
-    centroid.y *= ofGetHeight() / bgSub.m_fgmask.rows;
+    centroid /= bgSub.m_fgmask.cols;
     centroid -= zone.center;
     ofVec2f centroidPol = nebula::Utils::carToPol(centroid);
     centroidPol.y -= zone.angleOrigin;

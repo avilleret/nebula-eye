@@ -204,14 +204,19 @@ void nebulaEye::sendOSC(){
     m.setAddress("/b");
     m.addInt32Arg(contour.finder.getLabel(i));
     ofVec2f centroid = ofxCv::toOf(contour.finder.getCentroid(i));
+    centroid.x /= bgSub.m_fgmask.cols;
+    centroid.y /= bgSub.m_fgmask.rows;
     centroid -= zone.center;
     ofVec2f centroidPol = nebula::Utils::carToPol(centroid);
     centroidPol.y -= zone.angleOrigin;
     centroidPol.y = ofWrapDegrees(centroidPol.y);
     m.addFloatArg(centroidPol.x);
     m.addFloatArg(centroidPol.y);
-    m.addFloatArg(contour.finder.getContourArea(i));
-    m.addInt32Arg(zone.inside(ofxCv::toOf(contour.finder.getCentroid(i))));
+    m.addFloatArg(contour.finder.getContourArea(i) / (bgSub.m_fgmask.cols * bgSub.m_fgmask.rows));
+    ofVec2f pt;
+    pt.x = contour.finder.getCentroid(i).x / contour.blurred.cols;
+    pt.y = contour.finder.getCentroid(i).y / contour.blurred.cols;
+    m.addInt32Arg(zone.inside(pt));
     bundle.addMessage(m);
   }
 
@@ -279,6 +284,8 @@ void nebulaEye::recordCSVData(){
 
   if ( biggest != -1 ){
     ofVec2f centroid = ofxCv::toOf(contour.finder.getCentroid(biggest));
+    centroid.x *= ofGetWidth() / bgSub.m_fgmask.cols;
+    centroid.y *= ofGetHeight() / bgSub.m_fgmask.rows;
     centroid -= zone.center;
     ofVec2f centroidPol = nebula::Utils::carToPol(centroid);
     centroidPol.y -= zone.angleOrigin;

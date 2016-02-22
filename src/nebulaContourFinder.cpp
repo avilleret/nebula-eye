@@ -51,7 +51,10 @@ void nebulaContourFinder::draw(int x, int y, int w, int h){
       string msg = ofToString(label) + ":" + ofToString(tracker.getAge(label));
       ofDrawBitmapString(msg, 0, 0);
       ofDrawCircle(0,0,2);
-      msg = ofToString(finder.getCentroid(i));
+      ofVec2f pt = ofxCv::toOf(finder.getCentroid(i));
+      pt.x /= blurred.cols;
+      pt.y /= blurred.rows;
+      msg = ofToString(pt);
       ofDrawBitmapString(msg, 0, 12);
       ofVec2f velocity = ofxCv::toOf(finder.getVelocity(i));
       ofScale(5, 5);

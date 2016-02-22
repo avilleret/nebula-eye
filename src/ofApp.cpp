@@ -336,11 +336,10 @@ void nebulaEye::updateOSC(){
     ofxOscMessage m;
     receiver.getNextMessage(m);
     string add = m.getAddress();
-    string temp = "/background/MOG2/";
+    string temp = "/background/";
     if (add.substr(0,temp.size()) == temp){
       string paramName = add.substr(temp.size());
       bgSub.setParameterFloat(paramName, m.getArgAsFloat(0));
-      ofLogVerbose("nebulaEye") << "receive parameter : " << paramName << " : " << m.getArgAsFloat(0);
     } else if ( add == "/record" ) {
       record = m.getArgAsBool(0);
     }

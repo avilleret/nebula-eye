@@ -14,7 +14,7 @@ void nebulaEye::setup()
   displayGuiGrp.add(showGui.set("show this menu",true));
   displayGuiGrp.add(showVideo.set("show video",true));
   displayGuiGrp.add(showBgSub.set("show bgsub",true));
-  displayGuiGrp.add(bgSubIntensity.set("bg instensity",127,0,255));
+  displayGuiGrp.add(bgSubIntensity.set("bg intensity",127,0,255));
   displayGuiGrp.add(showContour.set("show contour",true));
   displayGuiGrp.add(showFlow.set("show motion flow",true));
   displayGuiGrp.add(showZone.set("show zone",true));

@@ -1,4 +1,4 @@
-#N canvas 995 236 843 664 10;
+#N canvas 662 23 843 664 10;
 #X obj 68 17 mrpeach/udpreceive 123456;
 #X obj 95 66 mrpeach/unpackOSC;
 #X obj 30 149 print;
@@ -45,21 +45,24 @@
 #X obj 544 67 mrpeach/unpackOSC;
 #X obj 544 131 print;
 #X obj 544 110 spigot;
-#X obj 577 91 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+#X obj 577 91 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
 #X obj 514 413 mrpeach/udpsend;
 #X obj 514 352 mrpeach/packOSC;
-#X floatatom 514 309 5 0 255 0 - - -, f 5;
+#X floatatom 511 283 5 0 255 0 - - -, f 5;
 #X obj 520 372 loadbang;
 #X obj 544 45 mrpeach/udpreceive 6666;
 #X msg 520 393 connect localhost 6667;
-#X msg 514 330 /nebula-eye/display/bg_intensity \$1;
 #X floatatom 532 242 5 0 0 0 - - -, f 5;
 #X msg 532 259 /nebula-eye/display/show_bgsub \$1;
 #X msg 563 300 /nebula-eye/Background_substraction/enable \$1;
 #X obj 563 282 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
 1;
-#X text 461 310 crash ->;
+#X msg 514 330 /nebula-eye/display/bg_intensity \$1;
+#X floatatom 480 188 5 0 0 0 - - -, f 5;
+#X text 461 310;
+#X msg 480 205 /nebula-eye/background/learningTime \$1;
+#X text 522 190 what's the address for this one?;
 #X connect 0 0 17 0;
 #X connect 1 0 3 0;
 #X connect 1 0 9 0;
@@ -95,12 +98,14 @@
 #X connect 42 0 41 0;
 #X connect 43 0 42 1;
 #X connect 45 0 44 0;
-#X connect 46 0 50 0;
+#X connect 46 0 54 0;
 #X connect 47 0 49 0;
 #X connect 48 0 40 0;
 #X connect 49 0 44 0;
-#X connect 50 0 45 0;
-#X connect 51 0 52 0;
+#X connect 50 0 51 0;
+#X connect 51 0 45 0;
 #X connect 52 0 45 0;
-#X connect 53 0 45 0;
-#X connect 54 0 53 0;
+#X connect 53 0 52 0;
+#X connect 54 0 45 0;
+#X connect 55 0 57 0;
+#X connect 57 0 45 0;

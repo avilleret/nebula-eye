@@ -14,6 +14,7 @@ ofxaddon(ofxGstRTP)
 ofxaddon(ofxDepthStreamCompression)
 ofxaddon(ofxSnappy)
 ofxaddon(ofxCsv)
+ofxaddon(ofxGem)
 
 include_directories (
  ${CMAKE_CURRENT_LIST_DIR}/ofxCv/libs/ofxCv/include/

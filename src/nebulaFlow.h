@@ -12,6 +12,7 @@ public:
     void draw(int x, int y){draw(x,y,0,0);};
 
     double getFlowInMask(cv::Mat mask,  cv::Mat * subFLow);
+    cv::Mat getUCFlow();
 
     ofxCv::FlowFarneback flow;
 

@@ -110,3 +110,28 @@ double nebulaFlow::getFlowInMask(cv::Mat mask, cv::Mat * subFlow){
 
   return cv::norm(m_flow, cv::NORM_L2, mask);
 }
+
+cv::Mat nebulaFlow :: getUCFlow(){
+  // convert the flow matrix to RGBA image
+  // red channel is x flow, green is y
+  // blue and alpha are constant resp. 127 and 255.
+  // TODO add a magnitude threshold ( if ( x² + y² < thresh ) x = y = 0. ) --> add this to nebulaFlow directly
+  // TODO add gain parameter
+
+  cv::Mat uc_flow, scaled_flow, ba;
+  uc_flow.create(m_flow.rows, m_flow.cols, CV_8UC2);
+  uc_flow = cv::Scalar(127,127);
+  ba.create(m_flow.rows, m_flow.cols, CV_8UC2); // ba is for blue and alpha channel
+  ba = cv::Scalar(127,255);
+
+  // scaling
+  scaled_flow = (m_flow+0.5) * 255.;
+  scaled_flow.convertTo(uc_flow,CV_8U);
+
+  // matrix concatenation
+  std::vector<cv::Mat> outArray = { uc_flow, ba };
+  cv::Mat out;
+  cv::merge(outArray, out);
+
+  return out;
+}

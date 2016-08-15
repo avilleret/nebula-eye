@@ -42,7 +42,7 @@ void nebulaBackground::setup(){
   }
 
   if ( m_bgsub_algos.size() == 0){
-    ofLogError("Can't find any background subtractor algorithm.");
+    ofLogError("nebulaBackground") << "Can't find any background subtractor algorithm.";
   } else {
     ofLogVerbose("nebulaBackground") << "found " << m_bgsub_algos.size() << " algos.";
     for (size_t i=0; i < m_bgsub_algos.size(); i++){

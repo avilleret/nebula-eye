@@ -10,6 +10,8 @@ void nebulaEye::setup()
   contour.setup();
   zone.setup();
 
+  pix_share.setup("/video_server");
+
   displayGuiGrp.setName("display");
   displayGuiGrp.add(showGui.set("show this menu",true));
   displayGuiGrp.add(showVideo.set("show video",true));
@@ -67,8 +69,12 @@ void nebulaEye::update()
     cvimg.copyTo(maskedImg,~zone.mask[0]);
     bgSub.update(maskedImg);
     flow.update(img);
+
+    if (pix_share.getSource() == nebulaPix_share::SOURCE_FLOW) pix_share.setPixels(flow.getUCFlow());
+
     if ( bgSub.enabled ){
       contour.update(bgSub.m_fgmask);
+      if (pix_share.getSource() == nebulaPix_share::SOURCE_FGMASK) pix_share.setPixels(bgSub.m_fgmask);
     } else {
       contour.update(ofxCv::toCv(img));
     }
